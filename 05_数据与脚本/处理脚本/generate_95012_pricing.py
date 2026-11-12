@@ -3,7 +3,7 @@
 生成 95012（禄品供应商模式）新版报价表 —— 合并补全方案
 
 数据源与口径：
-  - 骨架：桌面禄品筛选表（4940 行）「原」口径列，剔除「统一采购成本」实验列。
+  - 骨架：仓库 01_源数据/ 禄品4940 筛选表（4940 行）「原」口径列，剔除「统一采购成本」实验列。
   - 重合（主底稿命中）的 3188 个：采用成本 / 二次定价 / 二次加价率 用主底稿权威值覆盖；
     并补入主底稿独有且体现权威口径的列：成本取值口径、来福池成本(元)、定价状态。
   - 缺失（主底稿未命中）的 1752 个：沿用桌面「原」口径，新增权威列留空（标注"主底稿无此商品"）。
@@ -17,15 +17,16 @@
 
 用法：python3 generate_95012_pricing.py
 """
-import json, openpyxl
+import json, os, openpyxl
 
-REPO = "/Users/duxun/ai-workspace/projects/benlink-product"
-DESK = "/Users/duxun/Desktop/禄品的价格_筛选_2026-11-09.xlsx"
+REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# 源表默认取自仓库内 01_源数据/（已随仓库提交，走 git-lfs）；可用环境变量 BENLINK_SOURCE_XLSX 覆盖
+DESK = os.environ.get("BENLINK_SOURCE_XLSX", os.path.join(REPO, "01_源数据/禄品4940_筛选表_2026-11-09.xlsx"))
 BASE = f"{REPO}/02_报价表/来福商品池_成本及二次定价_2026-10-30.xlsx"
 PCODE = f"{REPO}/05_数据与脚本/95012平台核查/核准_禄品4940_P码清单_2026-11-12.json"
 OUT = f"{REPO}/02_报价表/禄品供应商模式_95012_成本及二次定价_2026-11-12.xlsx"
 
-# ---- 桌面禄品表（表头在 rows[1]，数据 rows[2:]）----
+# ---- 源表（禄品4940 筛选表，表头在 rows[1]，数据 rows[2:]）----
 wb = openpyxl.load_workbook(DESK, read_only=True, data_only=True)
 ws = wb.active
 drows = list(ws.iter_rows(values_only=True))

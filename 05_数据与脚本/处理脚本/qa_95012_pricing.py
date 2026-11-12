@@ -9,9 +9,10 @@
   5. 二次定价口径抽检：二次定价 ≈ 测算采用成本 × (1 + 二次加价率)，容差 0.02。
   6. 来福池成本(元) 有值行数应 = 重合数（3188）。
 """
-import openpyxl, sys
+import openpyxl, os, sys
 
-OUT = "/Users/duxun/ai-workspace/projects/benlink-product/02_报价表/禄品供应商模式_95012_成本及二次定价_2026-11-12.xlsx"
+REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+OUT = os.path.join(REPO, "02_报价表/禄品供应商模式_95012_成本及二次定价_2026-11-12.xlsx")
 EXPECT_ROWS = 4940
 EXPECT_MISS = 1752
 EXPECT_OVERLAP = 3188
