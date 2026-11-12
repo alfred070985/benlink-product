@@ -3,7 +3,7 @@ name: 分销商品池成本、二次定价与履约成本项目
 entry: START_HERE.md
 default_branch: main
 repo: git@github.com:alfred070985/benlink-product.git
-repo_status: proposed_not_created_or_verified
+repo_status: active
 project_type: data-analysis-and-excel-delivery
 required_capabilities:
   - name: benlai-trace-debug

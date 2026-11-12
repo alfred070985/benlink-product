@@ -1,6 +1,6 @@
 # benlink-product 跨环境续作指令
 
-> 建议远程仓库目前为 `git@github.com:alfred070985/benlink-product.git`，尚未创建或验证。首次推送成功后，这份指令才可用于直接克隆恢复。
+> 远程仓库 `git@github.com:alfred070985/benlink-product.git` 已创建并同步。把下面整段发给另一台电脑或另一个具备文件、Git 和终端能力的代理，即可恢复项目。
 
 把下面整段发给另一台电脑或另一个具备文件、Git 和终端能力的代理：
 
