@@ -1,0 +1,35 @@
+{
+  "status": 0,
+  "msg": "ok",
+  "data": {
+    "full_sql": "select top 1000 c.SysNo AS CustomSysNo, c.EntSysNo, c.StoreSysNo, c.Status AS CustomStatus,\n       c.IsDelete AS CustomIsDelete, c.Code, c.RecommendName,\n       i.SysNo AS ItemSysNo, i.ProductId, i.Status AS ItemStatus, i.IsDelete AS ItemIsDelete, i.Sort\nFROM dbo.PlatformProductCustom AS c\nLEFT JOIN dbo.PlatformProductCustomItem AS i ON i.RecommendSysNo = c.SysNo\nWHERE c.EntSysNo = 95012\nORDER BY c.SysNo, i.Sort, i.SysNo;",
+    "is_execute": false,
+    "checked": null,
+    "is_masked": true,
+    "query_time": 0.007748,
+    "mask_rule_hit": false,
+    "mask_time": 0.000926,
+    "warning": null,
+    "error": null,
+    "is_critical": false,
+    "rows": [],
+    "column_list": [
+      "CustomSysNo",
+      "EntSysNo",
+      "StoreSysNo",
+      "CustomStatus",
+      "CustomIsDelete",
+      "Code",
+      "RecommendName",
+      "ItemSysNo",
+      "ProductId",
+      "ItemStatus",
+      "ItemIsDelete",
+      "Sort"
+    ],
+    "column_type": [],
+    "status": null,
+    "affected_rows": 0,
+    "seconds_behind_master": null
+  }
+}

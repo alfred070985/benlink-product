@@ -1,0 +1,30 @@
+{
+  "status": 0,
+  "msg": "ok",
+  "data": {
+    "full_sql": "SELECT COUNT(*) AS detail_rows\nFROM callback_wmsx_order AS a\nJOIN callback_wmsx_order_detail AS b\n    ON a.callback_order_code=b.parent_order_code\nLEFT JOIN benlai_product.product_basic_info AS pb\n    ON b.sku_code COLLATE utf8mb4_0900_ai_ci = pb.ProductID\nWHERE a.inventory_time >= '2026-10-01'\n  AND a.inventory_time < '2026-10-30'\n  AND a.customer_code = 'BLSH'\n  AND a.is_deleted = 0\n  AND a.order_type IN (\n      'CGRK_XZ','CGRK_GYSZS','CGRK_YCD','CGRK',\n      'WMSX_ALLOCATION_IN_DIFF',\n      'CGTH','CGTH_XZ','CGTH_RMA','CGTH_GYSZS'\n  ) limit 100;",
+    "is_execute": false,
+    "checked": null,
+    "is_masked": false,
+    "query_time": 25.082971,
+    "mask_rule_hit": false,
+    "mask_time": 1.035078,
+    "warning": null,
+    "error": null,
+    "is_critical": false,
+    "rows": [
+      [
+        1091557
+      ]
+    ],
+    "column_list": [
+      "detail_rows"
+    ],
+    "column_type": [
+      "LONGLONG"
+    ],
+    "status": null,
+    "affected_rows": 1,
+    "seconds_behind_master": null
+  }
+}

@@ -1,0 +1,26 @@
+project_id: benlink-product
+name: 分销商品池成本、二次定价与履约成本项目
+entry: START_HERE.md
+default_branch: main
+repo: git@github.com:alfred070985/benlink-product.git
+repo_status: proposed_not_created_or_verified
+project_type: data-analysis-and-excel-delivery
+required_capabilities:
+  - name: benlai-trace-debug
+    source: external_capability_pack
+    copy_into_repo: false
+    shared_alias: ~/ai-workspace/shared/benlai-trace-debug
+    archery_dir_env: BENLAI_ARCHERY_DIR
+    archery_dir_fallback: ~/ai-workspace/shared/benlai-trace-debug/scripts/archery
+    credentials: stay_in_original_capability_pack
+large_files:
+  strategy: git-lfs
+  patterns:
+    - "*.xlsx"
+    - "*.jsonl"
+data_access:
+  production_query: archery_readonly_only
+  direct_database_connection: forbidden
+scope:
+  allow_project_root_only: true
+  scan_sibling_projects: false

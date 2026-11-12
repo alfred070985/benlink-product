@@ -1,0 +1,25 @@
+{
+  "total_products": 43519,
+  "collected_products": 26771,
+  "processed_without_purchase_record": 16748,
+  "remaining_unprocessed": 0,
+  "coverage_complete": true,
+  "last_run": [
+    {
+      "requested": 5000,
+      "matched": 2454,
+      "returned_in_range": 5180,
+      "query_seconds": 28.772284,
+      "full_sql_suffix": "    ON product_id COLLATE utf8mb4_0900_ai_ci = pb.ProductID\nWHERE purchase_rank = 1\nORDER BY product_id limit 200000000;",
+      "remaining_unprocessed": 484
+    },
+    {
+      "requested": 484,
+      "matched": 131,
+      "returned_in_range": 402,
+      "query_seconds": 24.583496,
+      "full_sql_suffix": "    ON product_id COLLATE utf8mb4_0900_ai_ci = pb.ProductID\nWHERE purchase_rank = 1\nORDER BY product_id limit 200000000;",
+      "remaining_unprocessed": 0
+    }
+  ]
+}

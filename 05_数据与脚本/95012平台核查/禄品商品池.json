@@ -1,0 +1,39 @@
+{
+  "status": 0,
+  "msg": "ok",
+  "data": {
+    "full_sql": "select top 1000 *\nFROM dbo.Product_Pool\nWHERE PoolName LIKE N'%禄品%'\n   OR SysNo = 95012\n   OR PoolType = 1\nORDER BY SysNo;",
+    "is_execute": false,
+    "checked": null,
+    "is_masked": true,
+    "query_time": 0.009552,
+    "mask_rule_hit": false,
+    "mask_time": 0.000754,
+    "warning": null,
+    "error": null,
+    "is_critical": false,
+    "rows": [],
+    "column_list": [
+      "SysNo",
+      "PoolName",
+      "BusinessType",
+      "PoolType",
+      "IsShow",
+      "SkuCount",
+      "Status",
+      "IsDelete",
+      "CreateUserSysNo",
+      "CreateTime",
+      "LastUpdateUserSysNo",
+      "LastUpdateTime",
+      "PoolAttribute",
+      "PoolScope",
+      "ParentSysNo",
+      "IsUseCustomerPool"
+    ],
+    "column_type": [],
+    "status": null,
+    "affected_rows": 0,
+    "seconds_behind_master": null
+  }
+}

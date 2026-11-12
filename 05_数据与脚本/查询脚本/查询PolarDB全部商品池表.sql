@@ -1,0 +1,7 @@
+SELECT TABLE_SCHEMA, TABLE_NAME, TABLE_TYPE
+FROM information_schema.TABLES
+WHERE TABLE_NAME LIKE '%pool%'
+   OR TABLE_NAME LIKE '%platform%product%'
+   OR TABLE_NAME LIKE '%product%platform%'
+   OR TABLE_NAME LIKE '%partner%'
+ORDER BY TABLE_SCHEMA, TABLE_NAME;

@@ -1,0 +1,62 @@
+{
+  "status": 0,
+  "msg": "ok",
+  "data": {
+    "full_sql": "select top 1000 ProductPoolType, Status, IsDelete, COUNT_BIG(1) AS PlatformCount,\n       MIN(SysNo) AS MinPlatformSysNo, MAX(SysNo) AS MaxPlatformSysNo\nFROM dbo.Platform\nGROUP BY ProductPoolType, Status, IsDelete\nORDER BY ProductPoolType, Status, IsDelete;",
+    "is_execute": false,
+    "checked": null,
+    "is_masked": true,
+    "query_time": 0.040632,
+    "mask_rule_hit": false,
+    "mask_time": 0.00099,
+    "warning": null,
+    "error": null,
+    "is_critical": false,
+    "rows": [
+      [
+        0,
+        1,
+        false,
+        37,
+        206,
+        95658
+      ],
+      [
+        1,
+        1,
+        false,
+        17217,
+        58,
+        97337
+      ],
+      [
+        1,
+        1,
+        true,
+        5,
+        30639,
+        96973
+      ],
+      [
+        2,
+        1,
+        false,
+        136,
+        57,
+        251
+      ]
+    ],
+    "column_list": [
+      "ProductPoolType",
+      "Status",
+      "IsDelete",
+      "PlatformCount",
+      "MinPlatformSysNo",
+      "MaxPlatformSysNo"
+    ],
+    "column_type": [],
+    "status": null,
+    "affected_rows": 4,
+    "seconds_behind_master": null
+  }
+}
