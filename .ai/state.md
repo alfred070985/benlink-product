@@ -2,7 +2,7 @@
 
 - project_id: benlink-product
 - resume_branch: main
-- updated_at: 2026-11-12T12:13:00+08:00
+- updated_at: 2026-11-12T14:12:00+08:00
 - status: blocked
 - git_remote: active
 
@@ -21,6 +21,8 @@
 - 2026-11-12 已初始化 Git，完成首次本地提交 `069b6af6da3871be368892719f469d7b65004a8d`。
 - 2026-11-12 已创建远程私有仓库 `git@github.com:alfred070985/benlink-product.git` 并推送 `main`；截至状态更新时，远程最新提交为 `e52474f8d09af676d8f63b643d4e1a41b1779797`。
 - 2026-11-12 已核验 14 个 `*.xlsx`／`*.jsonl` 文件进入 Git LFS，且无待上传 LFS 对象。
+- 2026-11-12 续作代理在本机克隆仓库（HEAD `fbdee07`）；安装 Git LFS 3.8.1、执行 `git lfs install` 与 `git lfs pull`，确认 14 个 xlsx／jsonl 均为真实内容（0 指针）；离线 `python3 .ai/verify.py` 通过（54 个 py 语法 OK）。
+- 2026-11-12 从 GitHub `alfred070985/tech-team-internal-ops` 取得 `benlai-trace-debug` 能力包（`skills/benlai-trace-debug`），软链至 `~/ai-workspace/shared/benlai-trace-debug`；`python3 .ai/verify.py --require-archery` 通过（`archery_ready=true`）。能力包代码通道就绪。
 
 ## 下一步
 
@@ -28,7 +30,7 @@
 
 ## 阻塞
 
-- 上次最终核查时 Archery 登录超时；新环境需要可用的公司网络／VPN、有效 Archery 登录和本机 `benlai-trace-debug` 能力包。
+- 本机已配置 `benlai-trace-debug` 能力包（软链就绪），但 `config.yaml` 为空白模板、本机无 `config.local.yaml`，尚缺 Archery 登录凭证（账号／密码）；需用户提供 `BENLAI_ARCHERY_USERNAME`/`BENLAI_ARCHERY_PASSWORD` 或本机 `config.local.yaml`，且需公司网络／VPN 可达 `dbaudit.benlai.com`。
 - `95012` 商品范围未确认。
 
 ## 验证
@@ -38,7 +40,7 @@
 - 路径解析检查：`BENLAI_ARCHERY_DIR` 环境变量覆盖已通过。
 - 远程核验：`git ls-remote --symref origin HEAD main` 已确认远程默认分支为 `main`；`git lfs push --dry-run origin main` 无待上传对象。
 - Archery 环境命令：`python3 .ai/verify.py --require-archery`
-- 最近结果：未运行，不访问生产数据；当前能力包路径尚未配置，不能直接执行线上查询。
+- 最近结果：2026-11-12 通过（`archery_ready=true`）；能力包代码通道就绪，但真实登录尚未验证（缺 Archery 凭证），未访问生产数据。
 - 既有 Excel 历史 QA：本次未重新运行；历史口径与结果见项目汇总和既有校验文件。
 
 ## 环境注意事项
