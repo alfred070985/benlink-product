@@ -2,8 +2,8 @@
 
 - project_id: benlink-product
 - resume_branch: main
-- updated_at: 2026-11-12T14:12:00+08:00
-- status: blocked
+- updated_at: 2026-11-12T14:35:00+08:00
+- status: approved
 - git_remote: active
 
 ## 当前目标
@@ -16,7 +16,7 @@
 - 当前成本与二次定价底稿：`02_报价表/来福商品池_成本及二次定价_渠道中位数加权成本_2026-10-30.xlsx`。文件名是历史遗留，业务上按分销商品池理解。
 - 已完成上海履约成本试算与回填版本，但该版本不是 `95012` 新版报价表。
 - 已确认 `95012` 在开放平台 Partner 和基础 ERP Platform 中有效，名称为“禄品供应商模式”。
-- 已定位 PolarDB `benlai_business_product` 的平台商品／商品池相关表，但尚未确认 `95012` 当前商品清单。
+- 已定位 PolarDB `benlai_business_product` 的平台商品／商品池相关表，并已确认 `95012` 当前商品清单（见下方「核准结论」）。
 - 2026-11-12 已加入跨环境续作入口、状态、决策、离线验证、Git LFS 约定和可移植 Archery 路径解析。
 - 2026-11-12 已初始化 Git，完成首次本地提交 `069b6af6da3871be368892719f469d7b65004a8d`。
 - 2026-11-12 已创建远程私有仓库 `git@github.com:alfred070985/benlink-product.git` 并推送 `main`；截至状态更新时，远程最新提交为 `e52474f8d09af676d8f63b643d4e1a41b1779797`。
@@ -26,12 +26,23 @@
 
 ## 下一步
 
-确认 `95012` 当前商品清单：通过 Archery 只读执行 `05_数据与脚本/查询脚本/统计PolarDB禄品平台商品.sql`，保存真实结果，再沿有效平台商品关系导出并核验商品清单；清单未确认前不得生成新版报价表。
+清单已核准，待用户确认后生成新版报价表：沿用既有成本与二次定价口径（权威类目成本逻辑，非前序「统一采购成本」实验），**不含上海履约成本字段**，**不得命名为「来福商品池」**（业务上即禄品供应商模式 95012 报价表）。生成前需再次确认口径与字段范围。
+
+## 核准结论（2026-11-12）
+
+- 本地桌面清单源：`Desktop/禄品的价格_筛选_2026-11-09.xlsx`（4940 个 P 码，经 `product` 表映射）。
+- 平台侧：`platform_product WHERE PlatformSysNo=95012 AND IsDelete=0`。
+- 计数：platform_product=4940、active=4940、有效平台商品=4940、website=19502、exclusive=0。
+- 精确差集（本地 P 码→product 表映射后与平台明细比对）：
+  - 本地 P 码→product 表命中 4940/4940（未命中 0）；
+  - `SysNo ↔ ProductSysNo` 交集=4940、仅本地=0、仅平台=0；
+  - `ProductBasicSysNo ↔ ProductBasicSysNo` 交集=4940、仅本地=0、仅平台=0。
+- **结论：本地禄品4940清单 = 平台95012当前在售商品清单，完全一致（零差集），清单核准通过。**
+- 结果已存盘：`05_数据与脚本/95012平台核查/核准_清单精确差集_2026-11-12.json`；可复现脚本：`05_数据与脚本/95012平台核查/verify_95012_list.py`。
 
 ## 阻塞
 
-- 本机已配置 `benlai-trace-debug` 能力包（软链就绪），但 `config.yaml` 为空白模板、本机无 `config.local.yaml`，尚缺 Archery 登录凭证（账号／密码）；需用户提供 `BENLAI_ARCHERY_USERNAME`/`BENLAI_ARCHERY_PASSWORD` 或本机 `config.local.yaml`，且需公司网络／VPN 可达 `dbaudit.benlai.com`。
-- `95012` 商品范围未确认。
+- 无。Archery 凭证已通过真实副本 `config.local.yaml` 配置并跑通（核准计数与精确差集均已成功访问生产 PolarDB）；`95012` 商品范围已核准确认。
 
 ## 验证
 
@@ -40,7 +51,7 @@
 - 路径解析检查：`BENLAI_ARCHERY_DIR` 环境变量覆盖已通过。
 - 远程核验：`git ls-remote --symref origin HEAD main` 已确认远程默认分支为 `main`；`git lfs push --dry-run origin main` 无待上传对象。
 - Archery 环境命令：`python3 .ai/verify.py --require-archery`
-- 最近结果：2026-11-12 通过（`archery_ready=true`）；能力包代码通道就绪，但真实登录尚未验证（缺 Archery 凭证），未访问生产数据。
+- 最近结果：2026-11-12 通过（`archery_ready=true`）；且已用真实凭证成功访问生产 PolarDB，完成 95012 核准计数与精确差集核验（详见上方「核准结论」）。
 - 既有 Excel 历史 QA：本次未重新运行；历史口径与结果见项目汇总和既有校验文件。
 
 ## 环境注意事项
