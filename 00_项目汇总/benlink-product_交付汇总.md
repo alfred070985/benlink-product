@@ -1,8 +1,10 @@
 # 分销商品池成本、二次定价与履约成本项目交付汇总
 
-> 归档日期：2026-11-12  
-> 工作区：`/Users/duxun/Documents/kimi/tasks/2026-10-29/19-47-39-2c61d47a`  
-> 统一交付目录：`/Users/duxun/个人/我的项目/benlink-product`
+> 归档日期：2026-11-12
+>
+> 当时的工作区（旧机路径，现已不适用）：`/Users/duxun/Documents/kimi/tasks/2026-10-29/19-47-39-2c61d47a`
+>
+> 当时的统一交付目录（旧机路径，现以 git 仓库为准）：`/Users/duxun/个人/我的项目/benlink-product`
 
 ## 1. 项目结论
 

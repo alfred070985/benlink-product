@@ -7,28 +7,50 @@
   -> 与 Archery platform_product(PlatformSysNo=95012, IsDelete=0) 明细做精确差集。
 
 依赖（本机特定，不提交）：
-  - lupin-sales/run_sql.py  （Archery 封装，内部硬编码真实 benlai-trace-debug 能力包路径）
+  - SQL 查询封装 run_sql.py（提供 DEFAULT_INSTANCE / make_client / run_sql），
+    所在目录由环境变量 BENLAI_SQL_RUNNER_DIR 指定；旧机当时位于 lupin-sales/ 下。
+    本机能力包只提供 archery_client.py，接口不同，不能直接顶替；
+    若要在本机重查生产库，须先确认查询封装的接入方式（单独决策，本脚本不自动连库）。
   - benlai-trace-debug 能力包 + 真实 config.local.yaml 凭证
 
 用法：
   python3 verify_95012_list.py [本地清单xlsx路径]
-  默认本地清单：/Users/duxun/Desktop/禄品的价格_筛选_2026-11-09.xlsx
+  默认本地清单：仓库内 01_源数据/禄品4940_筛选表_2026-11-09.xlsx（表头在第二行）
+  可用环境变量 BENLINK_SOURCE_XLSX 覆盖；重查前须设置 BENLAI_SQL_RUNNER_DIR。
+  核准结论与差集结果已随仓库保存，日常续作无需重跑本脚本。
 """
-import sys, json, openpyxl
+import os, sys, json, openpyxl
 
-LUPIN_SALES = "/Users/duxun/WorkBuddy/2026-11-07-07-14-11/lupin-sales"
-sys.path.insert(0, LUPIN_SALES)
-import run_sql  # noqa: E402
+REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# 源表默认取自仓库内 01_源数据/（已随仓库提交，走 git-lfs）；可用环境变量覆盖
+LOCAL_DEFAULT = os.environ.get(
+    "BENLINK_SOURCE_XLSX",
+    os.path.join(REPO, "01_源数据/禄品4940_筛选表_2026-11-09.xlsx"),
+)
 
-LOCAL_DEFAULT = "/Users/duxun/Desktop/禄品的价格_筛选_2026-11-09.xlsx"
+# 查询封装只在本机提供，不写死任何机器的绝对路径；未配置时仅在实际重查时给出明确提示
+SQL_RUNNER_DIR = os.environ.get("BENLAI_SQL_RUNNER_DIR")
+if SQL_RUNNER_DIR:
+    sys.path.insert(0, SQL_RUNNER_DIR)
+try:
+    import run_sql  # noqa: E402
+except ModuleNotFoundError:
+    run_sql = None
+
 DB = "benlai_business_product"
-INST = run_sql.DEFAULT_INSTANCE
 PLATFORM = 95012
 
 
 def main():
+    if run_sql is None:
+        raise SystemExit(
+            "未找到 SQL 查询封装 run_sql.py：请设置 BENLAI_SQL_RUNNER_DIR 指向其所在目录。\n"
+            "本机能力包只提供 archery_client.py，接口不同，不能直接顶替；接入方式需单独确认。\n"
+            "核准结论与差集结果已随仓库保存，日常续作无需重跑本脚本。"
+        )
     local_path = sys.argv[1] if len(sys.argv) > 1 else LOCAL_DEFAULT
     client = run_sql.make_client()
+    inst = run_sql.DEFAULT_INSTANCE
 
     # 1) 本地 P 码
     wb = openpyxl.load_workbook(local_path, read_only=True, data_only=True)
@@ -44,7 +66,7 @@ def main():
     # 2) 平台明细
     sql_pp = (f"SELECT ProductSysNo, ProductBasicSysNo FROM platform_product "
               f"WHERE PlatformSysNo={PLATFORM} AND IsDelete=0")
-    c1, r1 = run_sql.run_sql(client, sql_pp, DB, instance=INST, limit=10000)
+    c1, r1 = run_sql.run_sql(client, sql_pp, DB, instance=inst, limit=10000)
     pp_sysno = set(int(x[0]) for x in r1)
     pp_basic = set(int(x[1]) for x in r1 if x[1] is not None)
     print("platform_product 数:", len(r1),
@@ -55,7 +77,7 @@ def main():
     pids_str = ",".join(f"'{p}'" for p in local)
     sql_map = (f"SELECT ProductId, SysNo, ProductBasicSysNo FROM product "
                f"WHERE ProductId IN ({pids_str})")
-    c2, r2 = run_sql.run_sql(client, sql_map, DB, instance=INST, limit=10000)
+    c2, r2 = run_sql.run_sql(client, sql_map, DB, instance=inst, limit=10000)
     m_sysno, m_basic = {}, {}
     for x in r2:
         pid = (x[0] or "").strip()
