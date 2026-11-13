@@ -2,7 +2,7 @@
 
 - project_id: benlink-product
 - resume_branch: main
-- updated_at: 2026-11-13T09:18:35+08:00
+- updated_at: 2026-11-13T11:00:24+08:00
 - status: generated
 - git_remote: active
 
@@ -25,6 +25,7 @@
 - 2026-11-12 从 GitHub `alfred070985/tech-team-internal-ops` 取得 `benlai-trace-debug` 能力包（`skills/benlai-trace-debug`），软链至 `~/ai-workspace/shared/benlai-trace-debug`；`python3 .ai/verify.py --require-archery` 通过（`archery_ready=true`）。能力包代码通道就绪。
 - 2026-11-12 已核准 `95012` 商品清单（本地 4940 = 平台在售 4940，零差集，详见「核准结论」），并生成 `95012` 新版报价表（详见「生成结论」），两者均通过独立 QA。
 - 2026-11-12（提交 `0a03f44`）已把 95012 生成／QA 两个脚本改为仓库相对路径，并把 4940 行禄品筛选表 `01_源数据/禄品4940_筛选表_2026-11-09.xlsx` 提交入仓（走 Git LFS）；新机 clone 后自带全部数据，无需旧机桌面文件即可重跑。
+- 2026-11-13 按控制仓库 `MULTI_MACHINE_RULES.md`（R1–R12）修复交付一致性：交付清单按路径 upsert 重算 7 行过期指纹（2 行因脚本改相对路径后未同步、5 行属初始登记口径有误），新增只读对账脚本 `05_数据与脚本/处理脚本/verify_delivery_inventory.py` 并按 R4 当轮登记，交付汇总时间线补「当时」注记。清单现 178 条，全量对账通过；业务数据与 95012 报价表零改动。
 
 ## 下一步
 
@@ -59,13 +60,14 @@
 ## 验证
 
 - 离线命令：`python3 .ai/verify.py`
-- 最近结果：2026-11-13 在本机通过；已检查 57 个 Python 文件，项目身份、必要文件和 LFS 跟踪配置完整，`openpyxl`、`bs4` 可用，`archery_ready=true`，无告警无错误。
+- 最近结果：2026-11-13 在本机通过；已检查 58 个 Python 文件（新增交付清单对账脚本后；此前为 57 个），项目身份、必要文件和 LFS 跟踪配置完整，`openpyxl`、`bs4` 可用，`archery_ready=true`，无告警无错误。
 - 路径解析检查：`BENLAI_ARCHERY_DIR` 环境变量覆盖已通过。
 - 远程核验：`git ls-remote --symref origin HEAD main` 已确认远程默认分支为 `main`。
 - Archery 环境命令：`python3 .ai/verify.py --require-archery`
 - 最近结果：2026-11-12 通过（`archery_ready=true`）；已用真实凭证成功访问生产 PolarDB，完成 95012 核准计数、精确差集核验（详见「核准结论」）。
 - 95012 报价表 QA：`python3 05_数据与脚本/处理脚本/qa_95012_pricing.py`，2026-11-13 在本机复跑全部通过（32 列 × 4940 行、无禁用列名、缺失标注 1752、公式抽检 4924/4924、来福池成本有值行 3188）。
 - 既有 Excel 历史 QA：本次未重新运行；历史口径与结果见项目汇总和既有校验文件。
+- 交付清单对账（R6）：`python3 05_数据与脚本/处理脚本/verify_delivery_inventory.py`；2026-11-13 在本机通过——178 条清单 vs 178 个交付物，漏登 0、丢失 0、路径重复 0、字节数不符 0、SHA256 不符 0。
 
 ## 本机环境（2026-11-13 复核）
 
@@ -75,6 +77,7 @@
 - 数据：16 个 LFS 文件全部为真实内容、0 指针；新入仓源表经只读核验为 4940 行数据、表头在第二行、关键列齐备，与生成脚本假设一致。
 - Python：venv 位于 `~/ai-workspace/local/venv`（openpyxl 3.1.5、beautifulsoup4），不进任何仓库。
 - 业务：用户已确认暂不推进 A/B；95012 报价表与所有业务数据原样保留，`status` 仍为 `generated`。本次仅补齐文档口径，未改动任何业务产物。
+- 2026-11-13 补充：控制仓库新增 R1–R12 后，本机续作动作已按其调整——拉取用 merge（`git pull --no-rebase`）、清单按路径 upsert 并在交付物创建当轮登记、文档随状态实时更新、暂停前 state → 真验证 → 推送成功才称已同步。
 
 ## 环境注意事项
 
@@ -84,3 +87,4 @@
 - 本机已有全局 `git-lfs` 3.7.1；旧机当时使用工作区内的便携版，该工具不属于项目文件、不会提交。
 - 95012 生成／QA 两个脚本已改为仓库相对路径（基于 `__file__` 推导根目录，源表可用 `BENLINK_SOURCE_XLSX` 覆盖）；`verify_95012_list.py` 仍引用旧机 `lupin-sales/run_sql.py`，仅在重查生产库时才需要，接入前须先适配本机能力包接口。
 - 旧脚本若引用历史扁平目录，应在实际续作时按当前归档结构单独修复，不改变业务逻辑。
+- 交付物口径（R4／R6）：`01_源数据`～`06_校验记录` 六个业务目录下的全部文件，外加 `00_项目汇总/benlink-product_交付汇总.md`；`.ai/`、根目录治理文档、交付清单自身、`新电脑接手指引.md` 不属于交付物，不登记。口径以 `05_数据与脚本/处理脚本/verify_delivery_inventory.py` 顶部常量为准，改动交付物后须同步 upsert 清单并跑该脚本对账。

@@ -1,5 +1,5 @@
 ﻿相对路径,文件名,字节数,修改时间,SHA256
-00_项目汇总/benlink-product_交付汇总.md,benlink-product_交付汇总.md,13258,2026-11-13 09:34:00,0d4cdaaf64fefb98dd3f2b08154be87a66d54d0d1faafafe468dfe46c3fa5493
+00_项目汇总/benlink-product_交付汇总.md,benlink-product_交付汇总.md,13381,2026-11-13 11:00:06,65916ba7a5a02c945ef1a101f0953141fc27ede8b44af22aaf462b2758a75ec6
 01_源数据/商品池10.29.xlsx,商品池10.29.xlsx,9847276,2026-10-30 12:18:19,e88f870515d6dd45bde96e3e431c99795cfb09aaf314eea9b9c27937026fc1b1
 02_报价表/来福商品池_成本及二次定价_2026-10-30.xlsx,来福商品池_成本及二次定价_2026-10-30.xlsx,12933911,2026-10-30 14:59:29,5aa5aa6c9ddb08e17cdc3967d97fc43a1bcf6ee5b8f042eabd627806bbd34004
 02_报价表/来福商品池_成本及二次定价_Product_Price加权成本_2026-10-30.xlsx,来福商品池_成本及二次定价_Product_Price加权成本_2026-10-30.xlsx,14548363,2026-10-30 17:05:12,e01a1884ab5c521419b23921f5e0fa8b0efdbe63b95794ddaba03e1814ad84b9
@@ -40,7 +40,7 @@
 05_数据与脚本/处理脚本/diagnose_product_names.py,diagnose_product_names.py,686,2026-10-30 15:55:16,aceaed0ca550d7cf3f13c188b27f20f057f349822cc09fb20c43855dd07faf6a
 05_数据与脚本/处理脚本/diagnose_purchase_coverage.py,diagnose_purchase_coverage.py,654,2026-10-30 15:53:36,2458306c2196b9433d769afcfc515bc2071559544d54e6831b9752ed0059e963
 05_数据与脚本/处理脚本/dump_workbook_sheets.py,dump_workbook_sheets.py,668,2026-10-30 15:37:07,9431c22b6e1d7e4ecbcdc00de28c2e7e8815f3fe6d8a012bd97a5c1767f6bd10
-05_数据与脚本/处理脚本/execute_archery_query.py,execute_archery_query.py,2541,2026-10-30 16:08:15,9a5ee9da10532929d3a19cd315f9fbcde045e773ade551bdfd22812b1efe393a
+05_数据与脚本/处理脚本/execute_archery_query.py,execute_archery_query.py,2459,2026-11-12 18:46:31,2f4d3f1135a4d746cfaec9c74e4b189d74b7de6130076dae728bf66b50f197f0
 05_数据与脚本/处理脚本/fetch_channel_product_prices.py,fetch_channel_product_prices.py,4348,2026-10-30 18:22:31,17305505a8ddf10ecd941b17174df680ae798ad808f13c3aad7d78afc46771c3
 05_数据与脚本/处理脚本/fetch_costs.py,fetch_costs.py,3651,2026-10-30 12:22:36,dc5940f110f9a73bf33ec8edf91632d04b3515b5bc287e2a40ca67982a32d0be
 05_数据与脚本/处理脚本/fetch_latest_purchase_costs.py,fetch_latest_purchase_costs.py,8100,2026-10-30 15:29:07,605d2b5d57b76255e12156b2de54635757baac4184e1c16b2ed09ac46db1b115
@@ -51,9 +51,9 @@
 05_数据与脚本/处理脚本/generate_assortment.py,generate_assortment.py,18742,2026-10-30 14:36:50,0ad5c256cb6e3baa12ffb2a193cddb80802f5ec2780c13c3c43062219bb79eb3
 05_数据与脚本/处理脚本/generate_pricing.py,generate_pricing.py,15908,2026-10-30 12:37:45,a46e8d25f46198fb4ccb2770aefd4328c434670d47ee34f0d0d771969c02c1eb
 05_数据与脚本/处理脚本/generate_pricing_fast.py,generate_pricing_fast.py,17105,2026-10-30 12:53:44,fbefc6fb958e0e37e955271ba3eb250ad9d60725c4f4fe72cac1a078f3f1554a
-05_数据与脚本/处理脚本/inspect_archery_query.py,inspect_archery_query.py,1506,2026-10-30 15:17:39,90b318e108db7ad96f3d4493d275f693c92099a08e9381dfaa39739c07adc84d
+05_数据与脚本/处理脚本/inspect_archery_query.py,inspect_archery_query.py,1424,2026-11-12 18:46:31,18a2bab46215c5f2d853703f2f067011b8b16f3d9841b5f5a46aeee03ed5316b
 05_数据与脚本/处理脚本/inspect_current_workbook.py,inspect_current_workbook.py,2396,2026-10-30 15:15:14,dd4c4a62f6dfea5a4133ff04dfba0fd98ffa1a87e0054781efd9dc8a3f1849f1
-05_数据与脚本/处理脚本/list_archery_instances.py,list_archery_instances.py,884,2026-10-30 16:07:47,bf2eb743bb9a1d1bac0b46dd580bf652623f96cd6e206996b7344e609e60ec5e
+05_数据与脚本/处理脚本/list_archery_instances.py,list_archery_instances.py,802,2026-11-12 18:46:31,44afcca6ba0f6141dce6fd496aa1285dc4410f00b8686c2210619c526358ebe5
 05_数据与脚本/处理脚本/qa_assortment.py,qa_assortment.py,6554,2026-10-30 14:31:31,1a93441fc68ee32449a08ab5acbf7469331321e863028d4fd94117da8b70ce63
 05_数据与脚本/处理脚本/qa_channel_median_workbook.py,qa_channel_median_workbook.py,13987,2026-10-30 18:33:40,2c11be18857191ab64156358a5eddbe23320bf8f6bd2d4b6dbfe17f98c6fe3ad
 05_数据与脚本/处理脚本/qa_latest_purchase_workbook.py,qa_latest_purchase_workbook.py,12412,2026-10-30 15:54:33,f1dfbd90febe17283718423bf7330c4484fab55dbecfe6172030a08ea2d8d72c
@@ -65,8 +65,8 @@
 05_数据与脚本/处理脚本/update_channel_median_workbook.py,update_channel_median_workbook.py,23709,2026-10-30 18:32:20,2dbd76e08d966ee01b803d917cf6d17e78adeebe6853056964349238132aa1f4
 05_数据与脚本/处理脚本/update_latest_purchase_workbook.py,update_latest_purchase_workbook.py,20793,2026-10-30 15:50:30,798755739d515dc789f952fba0570af3a06bcec27ebfe1d1ef770f88234916c8
 05_数据与脚本/处理脚本/update_product_price_weighted_workbook.py,update_product_price_weighted_workbook.py,20765,2026-10-30 17:04:33,a8c08393fe7f478dfdfc1dae4e6302e4bbfeb680f972370b17f33c7477c9db1f
-05_数据与脚本/处理脚本/下载履约试算规则.py,下载履约试算规则.py,2151,2026-11-02 10:21:23,48e1d73bec0e5199c889b4fde6ce17a996038a4844bda3905a5e5459b2c31178
-05_数据与脚本/处理脚本/下载已定价商品_北京履约属性.py,下载已定价商品_北京履约属性.py,2861,2026-11-02 10:36:22,72522b686b7a4fa79df4327463dc80102e3c15800caad616c293ade5a7258f9d
+05_数据与脚本/处理脚本/下载履约试算规则.py,下载履约试算规则.py,2070,2026-11-12 18:46:31,3a0f7e0ff2fd666d9086cdad498e2b2f5f00b6a3576a582d35b7648034994ab7
+05_数据与脚本/处理脚本/下载已定价商品_北京履约属性.py,下载已定价商品_北京履约属性.py,2780,2026-11-12 18:46:31,9dd3f4662c408d7195328c267140d2164146fbc3d71e746c1194187c7655cfd2
 05_数据与脚本/处理脚本/分析履约规则.py,分析履约规则.py,2555,2026-11-02 10:29:19,dcd59bb40336d551a6855b391e6ed319be154b9549984dfaceee7aa1c84b0610
 05_数据与脚本/处理脚本/回填上海履约成本到报价表.py,回填上海履约成本到报价表.py,5784,2026-11-02 20:13:53,b929763889f5ca96910ebba23be561dc3a7d6b1ee0de2293a21e1a28b5ef4715
 05_数据与脚本/处理脚本/恢复报价表公式缓存.py,恢复报价表公式缓存.py,3397,2026-11-02 20:25:42,2060b8ff1b965d49311db947cd79a899b169f6e1df4c90528b7a9df92a0a5785
@@ -168,11 +168,12 @@
 05_数据与脚本/查询脚本/统计禄品平台商品关系.sql,统计禄品平台商品关系.sql,598,2026-11-06 15:59:17,d3dba0840eff4eca7c9506fe6d7b96b4111a57e4c467a1e3df666572e9332523
 06_校验记录/P0000322178_履约成本试算_2026-11-02_recalc_verify.xlsx,P0000322178_履约成本试算_2026-11-02_recalc_verify.xlsx,12695,2026-11-02 18:14:14,9e6ed0646e35265c9057fdcd18ecbd8bb1552d6f6eba617cae09b0b4dcff9113
 02_报价表/禄品供应商模式_95012_成本及二次定价_2026-11-12.xlsx,禄品供应商模式_95012_成本及二次定价_2026-11-12.xlsx,1016220,2026-11-12 15:25:00,0ac8457fe0cd24059ed7347ad6e58f1be5dca9e1be8d87691c668bac84736f5e
-05_数据与脚本/处理脚本/generate_95012_pricing.py,generate_95012_pricing.py,5381,2026-11-12 15:25:00,6235921f16c3b2fb79b14e3ce949ea73ab2384beabfc0f49e86c1a2aaa03797d
-05_数据与脚本/处理脚本/qa_95012_pricing.py,qa_95012_pricing.py,4197,2026-11-12 15:25:00,ddeb15543c2abcaf17d0219d90b86187162b1287f62c1ff5c96ff6cdb00403e9
+05_数据与脚本/处理脚本/generate_95012_pricing.py,generate_95012_pricing.py,5622,2026-11-13 09:17:23,c53005dae6226e375bdee952ae5d48ff462e8cbb258b217199213a7768a812c9
+05_数据与脚本/处理脚本/qa_95012_pricing.py,qa_95012_pricing.py,4254,2026-11-13 09:17:23,9c14d576d28c5e93c7983be88d1ccd3dd70ff2cb52c2b4403bafbd51ad7bbe4b
 05_数据与脚本/95012平台核查/核准_禄品4940_P码清单_2026-11-12.json,核准_禄品4940_P码清单_2026-11-12.json,74127,2026-11-12 15:25:00,d0d7e56e303ae52d2678bf256c16b437a26f430615ca32c4b2fa7199e27456f4
 05_数据与脚本/95012平台核查/核准_清单精确差集_2026-11-12.json,核准_清单精确差集_2026-11-12.json,1278,2026-11-12 15:25:00,51b6b598d43d4a3b3ef3a2a7e256de6086c7d9bb7f72ac4d63cf93456d870e52
 05_数据与脚本/95012平台核查/verify_95012_list.py,verify_95012_list.py,3625,2026-11-12 15:25:00,111074816ff3c433f7ba5524790d6bb15c1203456ad2750b00a0b4e1dd24643a
 01_源数据/禄品4940_筛选表_2026-11-09.xlsx,禄品4940_筛选表_2026-11-09.xlsx,1112929,2026-11-13 09:17:28,3834f82bfca15b1c3f4c4df011e6a28072602f2d99f2ab4a578528bf88baa172
 05_数据与脚本/95012平台核查/核准_统计PolarDB禄品平台商品_2026-11-12.json,核准_统计PolarDB禄品平台商品_2026-11-12.json,255,2026-11-13 09:34:00,e2ab99b220345dbc45078bc5fab8ce3a0a35fe28cd55e0328691a6d1905821bf
 05_数据与脚本/处理脚本/archery_runtime.py,archery_runtime.py,377,2026-11-13 09:34:00,395d27f749a7054458733e29361314b4599ea39ef1de96546a3f4a059b15f23a
+05_数据与脚本/处理脚本/verify_delivery_inventory.py,verify_delivery_inventory.py,5414,2026-11-13 10:58:33,c64cfb71f0d79b9cf501d4dfaae3694c01179e9f4513a456a2fae57325ae9d56
