@@ -2,7 +2,7 @@
 
 - project_id: benlink-product
 - resume_branch: main
-- updated_at: 2026-11-12T15:25:00+08:00
+- updated_at: 2026-11-13T09:18:35+08:00
 - status: generated
 - git_remote: active
 
@@ -19,19 +19,20 @@
 - 已定位 PolarDB `benlai_business_product` 的平台商品／商品池相关表，并已确认 `95012` 当前商品清单（见下方「核准结论」）。
 - 2026-11-12 已加入跨环境续作入口、状态、决策、离线验证、Git LFS 约定和可移植 Archery 路径解析。
 - 2026-11-12 已初始化 Git，完成首次本地提交 `069b6af6da3871be368892719f469d7b65004a8d`。
-- 2026-11-12 已创建远程私有仓库 `git@github.com:alfred070985/benlink-product.git` 并推送 `main`；截至状态更新时，远程最新提交为 `e52474f8d09af676d8f63b643d4e1a41b1779797`。
-- 2026-11-12 已核验 14 个 `*.xlsx`／`*.jsonl` 文件进入 Git LFS，且无待上传 LFS 对象。
-- 2026-11-12 续作代理在本机克隆仓库（HEAD `fbdee07`）；安装 Git LFS 3.8.1、执行 `git lfs install` 与 `git lfs pull`，确认 14 个 xlsx／jsonl 均为真实内容（0 指针）；离线 `python3 .ai/verify.py` 通过（54 个 py 语法 OK）。
+- 2026-11-12 已创建远程私有仓库 `git@github.com:alfred070985/benlink-product.git` 并推送 `main`；当时的远程最新提交为 `e52474f8d09af676d8f63b643d4e1a41b1779797`（历史记录，当前一律以 `git log -1` 为准）。
+- 2026-11-12 已核验 `*.xlsx`／`*.jsonl` 走 Git LFS（当时 14 个；现为 16 个，新增 95012 报价表与禄品 4940 筛选表），且无待上传 LFS 对象。
+- 2026-11-12 续作代理在旧机克隆仓库（HEAD `fbdee07`）；安装 Git LFS 3.8.1、执行 `git lfs install` 与 `git lfs pull`，当时确认 14 个 xlsx／jsonl 均为真实内容（0 指针）；离线 `python3 .ai/verify.py` 通过（当时 54 个 py 语法 OK）。
 - 2026-11-12 从 GitHub `alfred070985/tech-team-internal-ops` 取得 `benlai-trace-debug` 能力包（`skills/benlai-trace-debug`），软链至 `~/ai-workspace/shared/benlai-trace-debug`；`python3 .ai/verify.py --require-archery` 通过（`archery_ready=true`）。能力包代码通道就绪。
 - 2026-11-12 已核准 `95012` 商品清单（本地 4940 = 平台在售 4940，零差集，详见「核准结论」），并生成 `95012` 新版报价表（详见「生成结论」），两者均通过独立 QA。
+- 2026-11-12（提交 `0a03f44`）已把 95012 生成／QA 两个脚本改为仓库相对路径，并把 4940 行禄品筛选表 `01_源数据/禄品4940_筛选表_2026-11-09.xlsx` 提交入仓（走 Git LFS）；新机 clone 后自带全部数据，无需旧机桌面文件即可重跑。
 
 ## 下一步
 
-新版报价表已生成并通过独立 QA，待用户审阅确认后可用于交付/汇报。如需调整列集或补齐缺失 1752 行的主底稿口径，再迭代。
+新版报价表已生成并通过独立 QA，待用户审阅确认后可用于交付/汇报。如需调整列集或补齐缺失 1752 行的主底稿口径，再迭代。2026-11-13 用户已确认暂不推进 A/B，报价表原样保留。
 
 ## 核准结论（2026-11-12）
 
-- 本地桌面清单源：`Desktop/禄品的价格_筛选_2026-11-09.xlsx`（4940 个 P 码，经 `product` 表映射）。
+- 本地桌面清单源：`Desktop/禄品的价格_筛选_2026-11-09.xlsx`（4940 个 P 码，经 `product` 表映射）；该表已以 `01_源数据/禄品4940_筛选表_2026-11-09.xlsx` 之名提交入仓，成为可复现的默认源表。
 - 平台侧：`platform_product WHERE PlatformSysNo=95012 AND IsDelete=0`。
 - 计数：platform_product=4940、active=4940、有效平台商品=4940、website=19502、exclusive=0。
 - 精确差集（本地 P 码→product 表映射后与平台明细比对）：
@@ -58,18 +59,28 @@
 ## 验证
 
 - 离线命令：`python3 .ai/verify.py`
-- 最近结果：2026-11-12 通过；已检查 54 个 Python 文件，项目身份、必要文件和 LFS 跟踪配置完整，`openpyxl`、`bs4` 可用。
+- 最近结果：2026-11-13 在本机通过；已检查 57 个 Python 文件，项目身份、必要文件和 LFS 跟踪配置完整，`openpyxl`、`bs4` 可用，`archery_ready=true`，无告警无错误。
 - 路径解析检查：`BENLAI_ARCHERY_DIR` 环境变量覆盖已通过。
 - 远程核验：`git ls-remote --symref origin HEAD main` 已确认远程默认分支为 `main`。
 - Archery 环境命令：`python3 .ai/verify.py --require-archery`
 - 最近结果：2026-11-12 通过（`archery_ready=true`）；已用真实凭证成功访问生产 PolarDB，完成 95012 核准计数、精确差集核验（详见「核准结论」）。
-- 95012 报价表 QA：`python3 05_数据与脚本/处理脚本/qa_95012_pricing.py`，2026-11-12 全部通过（详见「生成结论」）。
+- 95012 报价表 QA：`python3 05_数据与脚本/处理脚本/qa_95012_pricing.py`，2026-11-13 在本机复跑全部通过（32 列 × 4940 行、无禁用列名、缺失标注 1752、公式抽检 4924/4924、来福池成本有值行 3188）。
 - 既有 Excel 历史 QA：本次未重新运行；历史口径与结果见项目汇总和既有校验文件。
+
+## 本机环境（2026-11-13 复核）
+
+- 复核时 HEAD 为 `0a03f44`（本条状态文档提交后还会再前进一格，实际以 `git log -1` 为准）；`ad96cb6` 仍是 HEAD 的祖先；两个仓库工作区干净、与 `origin/main` 一致（0 领先／0 落后）。
+- 认证：本机新生成 ed25519 密钥并登记到 GitHub 账号，两个仓库 remote 已从 HTTPS 切回 `git@github.com:alfred070985/{ai-workspace,benlink-product}.git`；假推送不再返回 403，写入权限可用。
+- 能力包：本机已有完整 `benlai-trace-debug`（含 `config.local.yaml` 与 `.secrets/master.key`），软链 `~/ai-workspace/shared/benlai-trace-debug` 指向本机副本；凭证未被任何仓库跟踪，`--require-archery` 通过。
+- 数据：16 个 LFS 文件全部为真实内容、0 指针；新入仓源表经只读核验为 4940 行数据、表头在第二行、关键列齐备，与生成脚本假设一致。
+- Python：venv 位于 `~/ai-workspace/local/venv`（openpyxl 3.1.5、beautifulsoup4），不进任何仓库。
+- 业务：用户已确认暂不推进 A/B；95012 报价表与所有业务数据原样保留，`status` 仍为 `generated`。本次仅补齐文档口径，未改动任何业务产物。
 
 ## 环境注意事项
 
 - Archery 路径优先取 `BENLAI_ARCHERY_DIR`，否则取 `~/ai-workspace/shared/benlai-trace-debug/scripts/archery`。
-- 外部能力包和凭证不复制、不提交；各电脑只用软链接或环境变量适配。
-- `*.xlsx`、`*.jsonl` 使用 Git LFS；其他电脑首次克隆后必须确认 LFS 内容实际下载，而不只是指针文件。
-- 当前电脑的系统 PATH 没有全局 `git-lfs`；本次提交和推送使用的是工作区内经校验的便携 Git LFS，并已将仓库过滤器指向该本地二进制。该工具不属于项目文件，也不会提交。
+- 外部能力包和凭证不复制、不提交；各电脑只用软链接或环境变量适配。接手时先查本机是否已有完整能力包，确实没有才从旧机拷贝。
+- `*.xlsx`、`*.jsonl` 使用 Git LFS；其他电脑首次克隆后必须执行 `git lfs install && git lfs pull`，并逐个确认下载的是真实内容而不只是指针文件。
+- 本机已有全局 `git-lfs` 3.7.1；旧机当时使用工作区内的便携版，该工具不属于项目文件、不会提交。
+- 95012 生成／QA 两个脚本已改为仓库相对路径（基于 `__file__` 推导根目录，源表可用 `BENLINK_SOURCE_XLSX` 覆盖）；`verify_95012_list.py` 仍引用旧机 `lupin-sales/run_sql.py`，仅在重查生产库时才需要，接入前须先适配本机能力包接口。
 - 旧脚本若引用历史扁平目录，应在实际续作时按当前归档结构单独修复，不改变业务逻辑。
