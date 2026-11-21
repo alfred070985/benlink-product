@@ -1,0 +1,36 @@
+{
+  "status": 0,
+  "msg": "ok",
+  "data": {
+    "full_sql": "select top 1000 (SELECT COUNT_BIG(1) FROM dbo.Platform_Product WHERE PlatformSysNo = 95012) AS PlatformProductRows,\n  (SELECT COUNT_BIG(1) FROM dbo.Platform_Product_WebSite WHERE PlatformSysNo = 95012) AS PlatformWebSiteRows,\n  (SELECT COUNT_BIG(1) FROM dbo.Platform_Product_Delivery WHERE PlatformSysNo = 95012) AS PlatformDeliveryRows,\n  (SELECT COUNT_BIG(1) FROM dbo.Platform_Product_Exclusive WHERE PlatformSysNo = 95012) AS PlatformExclusiveRows,\n  (SELECT COUNT_BIG(DISTINCT ProductSysNo) FROM dbo.Platform_Product_Exclusive WHERE PlatformSysNo = 95012 AND IsDelete = 0) AS ActiveExclusiveProducts;",
+    "is_execute": false,
+    "checked": null,
+    "is_masked": true,
+    "query_time": 0.050566,
+    "mask_rule_hit": false,
+    "mask_time": 0.000969,
+    "warning": null,
+    "error": null,
+    "is_critical": false,
+    "rows": [
+      [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    "column_list": [
+      "PlatformProductRows",
+      "PlatformWebSiteRows",
+      "PlatformDeliveryRows",
+      "PlatformExclusiveRows",
+      "ActiveExclusiveProducts"
+    ],
+    "column_type": [],
+    "status": null,
+    "affected_rows": 1,
+    "seconds_behind_master": null
+  }
+}

@@ -1,0 +1,186 @@
+{
+  "status": 0,
+  "msg": "ok",
+  "data": {
+    "full_sql": "SELECT TABLE_SCHEMA, TABLE_NAME, TABLE_TYPE\nFROM information_schema.TABLES\nWHERE TABLE_SCHEMA = 'benlai_product'\n  AND (TABLE_NAME LIKE '%pool%' OR TABLE_NAME LIKE '%platform%' OR TABLE_NAME LIKE '%product%')\nORDER BY TABLE_NAME limit 1000;",
+    "is_execute": false,
+    "checked": null,
+    "is_masked": false,
+    "query_time": 0.017719,
+    "mask_rule_hit": false,
+    "mask_time": 1.03015,
+    "warning": null,
+    "error": null,
+    "is_critical": false,
+    "rows": [
+      [
+        "benlai_product",
+        "product_basic_info",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_product",
+        "product_channel_info",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_product",
+        "product_channel_info_20250122",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_product",
+        "product_channel_info_temp",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_product",
+        "product_channel_price",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_product",
+        "product_channel_safe",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_product",
+        "product_clearance_apply",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_product",
+        "product_clearance_apply_item",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_product",
+        "product_clearance_raw",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_product",
+        "product_clearance_sync_cursor",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_product",
+        "product_content_info",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_product",
+        "product_expiration_report",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_product",
+        "product_expiration_report_manager",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_product",
+        "product_expiration_report_purchaser",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_product",
+        "product_expiration_warning_email_log",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_product",
+        "product_expiration_warning_email_recipient_log",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_product",
+        "product_expiration_warning_log",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_product",
+        "product_expiration_warning_setting",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_product",
+        "product_flag_info",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_product",
+        "product_flag_type",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_product",
+        "product_gross_profit_view",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_product",
+        "product_incident",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_product",
+        "product_incident_history",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_product",
+        "product_org_info",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_product",
+        "product_refer",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_product",
+        "product_trackorigin_platform",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_product",
+        "sales_product_change",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_product",
+        "sales_product_collection",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_product",
+        "sales_product_sync_progress",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_product",
+        "sales_product_view",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_product",
+        "third_product_change_log",
+        "BASE TABLE"
+      ]
+    ],
+    "column_list": [
+      "TABLE_SCHEMA",
+      "TABLE_NAME",
+      "TABLE_TYPE"
+    ],
+    "column_type": [
+      "VAR_STRING",
+      "VAR_STRING",
+      "STRING"
+    ],
+    "status": null,
+    "affected_rows": 31,
+    "seconds_behind_master": null
+  }
+}

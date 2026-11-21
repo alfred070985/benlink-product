@@ -1,0 +1,3 @@
+SELECT TOP 100 *
+FROM dbo.Platform
+ORDER BY 1;

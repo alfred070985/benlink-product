@@ -8,14 +8,23 @@ jdvop_pull/standalone/credentials.json
 .workbuddy/
 
 # ===== 系统垃圾 =====
-__pycache__/
-*.pyc
 .DS_Store
 .DS_Store?
+__pycache__/
+*.py[cod]
+.venv/
+venv/
 
-# ===== 运行时临时 =====
+# ===== 运行时临时与本地配置 =====
 *.log
 nohup.out
+.env
+.env.*
+!.env.example
+config.local.yaml
+*.local.yaml
+.ai/local/
+archery_sqlquery.html
 
 # ===== 已被新版取代的历史快照（内容已合并进 11-20/11-21 版）=====
 jdvop_pull/output/猫超详情_全量_2026-11-19.jsonl

@@ -1,0 +1,286 @@
+{
+  "status": 0,
+  "msg": "ok",
+  "data": {
+    "full_sql": "SELECT TABLE_SCHEMA, TABLE_NAME, TABLE_TYPE\nFROM information_schema.TABLES\nWHERE TABLE_NAME LIKE '%pool%'\n   OR TABLE_NAME LIKE '%platform%product%'\n   OR TABLE_NAME LIKE '%product%platform%'\n   OR TABLE_NAME LIKE '%partner%'\nORDER BY TABLE_SCHEMA, TABLE_NAME limit 1000;",
+    "is_execute": false,
+    "checked": null,
+    "is_masked": false,
+    "query_time": 0.028476,
+    "mask_rule_hit": false,
+    "mask_time": 1.012085,
+    "warning": null,
+    "error": null,
+    "is_critical": false,
+    "rows": [
+      [
+        "benlai_business_product",
+        "combine_product_pool",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_business_product",
+        "platform_product",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_business_product",
+        "platform_product_exclusive",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_business_product",
+        "platform_product_website",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_business_product",
+        "product_platformprice_audit",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_business_product",
+        "product_pool",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_business_product",
+        "product_pool_black",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_business_product",
+        "product_pool_item",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_business_product",
+        "product_pool_item_bak",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_business_product",
+        "product_pool_item_change",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_business_product",
+        "product_pool_item_history",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_business_product",
+        "product_pool_priceapply",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_business_product",
+        "product_pool_priceapply_history",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_business_product",
+        "product_pool_rule",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_business_product",
+        "product_pool_selection_rule",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_business_product",
+        "product_pool_type",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_business_product",
+        "product_pool_whitelist",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_business_product",
+        "product_pool_whitelist_log",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_business_product",
+        "sales_product_pool_blacklist",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_business_product",
+        "sales_product_pool_list_ext",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_business_product",
+        "sales_product_pool_whitelist",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_product",
+        "product_trackorigin_platform",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_third_vendor",
+        "t_product_pool",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_third_vendor",
+        "t_product_pool_change",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_third_vendor",
+        "t_product_pool_check",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_third_vendor",
+        "t_sku_pool",
+        "BASE TABLE"
+      ],
+      [
+        "benlai_third_vendor",
+        "t_sku_pool_change",
+        "BASE TABLE"
+      ],
+      [
+        "giftfolio",
+        "custom_product_pool",
+        "BASE TABLE"
+      ],
+      [
+        "giftfolio",
+        "custom_product_pool_spu",
+        "BASE TABLE"
+      ],
+      [
+        "information_schema",
+        "INNODB_BUFFER_POOL_STATS",
+        "SYSTEM VIEW"
+      ],
+      [
+        "information_schema",
+        "INNODB_GBP_BUFFER_POOL_STATS",
+        "SYSTEM VIEW"
+      ],
+      [
+        "information_schema",
+        "THREAD_POOL_STATUS",
+        "SYSTEM VIEW"
+      ],
+      [
+        "newretail_bazaar",
+        "copartner_user",
+        "BASE TABLE"
+      ],
+      [
+        "newretail_bazaar",
+        "copartner_user_address",
+        "BASE TABLE"
+      ],
+      [
+        "newretail_bazaar",
+        "copartner_user_fee",
+        "BASE TABLE"
+      ],
+      [
+        "newretail_oms",
+        "platform_allocation_diff_order_jicai_product",
+        "BASE TABLE"
+      ],
+      [
+        "newretail_oms",
+        "platform_jicai_combo_product",
+        "BASE TABLE"
+      ],
+      [
+        "newretail_oms",
+        "platform_split_order_exception_pool",
+        "BASE TABLE"
+      ],
+      [
+        "newretail_shop",
+        "area_platform_product",
+        "BASE TABLE"
+      ],
+      [
+        "newretail_shop",
+        "area_platform_product_rate",
+        "BASE TABLE"
+      ],
+      [
+        "newretail_shop",
+        "platform_product",
+        "BASE TABLE"
+      ],
+      [
+        "newretail_shop",
+        "platform_product_cost",
+        "BASE TABLE"
+      ],
+      [
+        "newretail_shop",
+        "platform_product_cost_error",
+        "BASE TABLE"
+      ],
+      [
+        "newretail_shop",
+        "platform_product_img",
+        "BASE TABLE"
+      ],
+      [
+        "newretail_shop",
+        "store_platform_product",
+        "BASE TABLE"
+      ],
+      [
+        "newretail_vendor",
+        "merchant_pool_goods",
+        "BASE TABLE"
+      ],
+      [
+        "newretail_vendor",
+        "merchant_pool_sale_order",
+        "BASE TABLE"
+      ],
+      [
+        "newretail_vendor",
+        "merchant_pool_send",
+        "BASE TABLE"
+      ],
+      [
+        "newretail_vendor",
+        "merchant_pool_sum_goods",
+        "BASE TABLE"
+      ],
+      [
+        "union_user_center",
+        "t_sku_pool",
+        "BASE TABLE"
+      ],
+      [
+        "union_user_center",
+        "t_sku_pool_change",
+        "BASE TABLE"
+      ]
+    ],
+    "column_list": [
+      "TABLE_SCHEMA",
+      "TABLE_NAME",
+      "TABLE_TYPE"
+    ],
+    "column_type": [
+      "VAR_STRING",
+      "VAR_STRING",
+      "STRING"
+    ],
+    "status": null,
+    "affected_rows": 51,
+    "seconds_behind_master": null
+  }
+}

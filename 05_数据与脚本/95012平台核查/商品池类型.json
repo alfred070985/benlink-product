@@ -1,0 +1,82 @@
+{
+  "status": 0,
+  "msg": "ok",
+  "data": {
+    "full_sql": "select top 1000 *\nFROM dbo.Product_Pool_Type\nORDER BY SysNo;",
+    "is_execute": false,
+    "checked": null,
+    "is_masked": true,
+    "query_time": 0.003704,
+    "mask_rule_hit": false,
+    "mask_time": 0.000777,
+    "warning": null,
+    "error": null,
+    "is_critical": false,
+    "rows": [
+      [
+        100,
+        "集采商品池",
+        2,
+        2,
+        1,
+        0,
+        0,
+        "2022-09-29 10:42:56.613000",
+        0,
+        "2022-09-29 10:42:56.613000"
+      ],
+      [
+        200,
+        "团购商品池",
+        5,
+        5,
+        1,
+        0,
+        0,
+        "2022-09-29 10:42:56.613000",
+        0,
+        "2022-09-29 10:42:56.613000"
+      ],
+      [
+        300,
+        "现货集采池",
+        5,
+        5,
+        1,
+        0,
+        0,
+        "2022-09-29 10:42:56.613000",
+        0,
+        "2022-09-29 10:42:56.613000"
+      ],
+      [
+        400,
+        "平台商品池",
+        5,
+        5,
+        1,
+        0,
+        0,
+        "2022-11-08 18:47:55.230000",
+        0,
+        "2022-11-08 18:47:55.230000"
+      ]
+    ],
+    "column_list": [
+      "SysNo",
+      "PoolTypeName",
+      "ChannelSysNo",
+      "SaleChannelSysNo",
+      "Status",
+      "IsDelete",
+      "CreateUserSysNo",
+      "CreateTime",
+      "LastUpdateUserSysNo",
+      "LastUpdateTime"
+    ],
+    "column_type": [],
+    "status": null,
+    "affected_rows": 4,
+    "seconds_behind_master": null
+  }
+}

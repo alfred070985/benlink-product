@@ -1,0 +1,46 @@
+{
+  "status": 0,
+  "msg": "ok",
+  "data": {
+    "full_sql": "select top 10 Sysno, Name, GroupSysNo, Status, Remark, ApiVersion,\n       integration_platform_id, traceability_platform_id,\n       CreateDate, UpdateDate\nFROM dbo.Partner\nWHERE Sysno = 95012",
+    "is_execute": false,
+    "checked": null,
+    "is_masked": true,
+    "query_time": 0.002425,
+    "mask_rule_hit": false,
+    "mask_time": 0.000808,
+    "warning": null,
+    "error": null,
+    "is_critical": false,
+    "rows": [
+      [
+        95012,
+        "禄品供应商模式",
+        20,
+        1,
+        null,
+        "1.1",
+        "2",
+        null,
+        "2025-06-05 13:32:25.220000",
+        "2025-06-05 13:32:25.220000"
+      ]
+    ],
+    "column_list": [
+      "Sysno",
+      "Name",
+      "GroupSysNo",
+      "Status",
+      "Remark",
+      "ApiVersion",
+      "integration_platform_id",
+      "traceability_platform_id",
+      "CreateDate",
+      "UpdateDate"
+    ],
+    "column_type": [],
+    "status": null,
+    "affected_rows": 1,
+    "seconds_behind_master": null
+  }
+}

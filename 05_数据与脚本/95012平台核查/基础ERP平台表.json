@@ -1,0 +1,67 @@
+{
+  "status": 0,
+  "msg": "ok",
+  "data": {
+    "full_sql": "select top 1000 TABLE_SCHEMA, TABLE_NAME, TABLE_TYPE\nFROM INFORMATION_SCHEMA.TABLES\nWHERE TABLE_NAME LIKE '%Partner%'\n   OR TABLE_NAME LIKE '%Platform%'\n   OR TABLE_NAME LIKE '%Group%'\n   OR TABLE_NAME LIKE '%Integration%'\nORDER BY TABLE_SCHEMA, TABLE_NAME",
+    "is_execute": false,
+    "checked": null,
+    "is_masked": true,
+    "query_time": 0.063192,
+    "mask_rule_hit": false,
+    "mask_time": 0.001321,
+    "warning": null,
+    "error": null,
+    "is_critical": false,
+    "rows": [
+      [
+        "cdc",
+        "dbo_Platform_CT",
+        "BASE TABLE"
+      ],
+      [
+        "dbo",
+        "Delivery_Area_Group",
+        "BASE TABLE"
+      ],
+      [
+        "dbo",
+        "Platform",
+        "BASE TABLE"
+      ],
+      [
+        "dbo",
+        "Platform_Carrier",
+        "BASE TABLE"
+      ],
+      [
+        "dbo",
+        "Platform_Contract",
+        "BASE TABLE"
+      ],
+      [
+        "dbo",
+        "Platform_Grossprofit_Config",
+        "BASE TABLE"
+      ],
+      [
+        "dbo",
+        "Platform_Privilege_User",
+        "BASE TABLE"
+      ],
+      [
+        "dbo",
+        "PlatformDefender",
+        "BASE TABLE"
+      ]
+    ],
+    "column_list": [
+      "TABLE_SCHEMA",
+      "TABLE_NAME",
+      "TABLE_TYPE"
+    ],
+    "column_type": [],
+    "status": null,
+    "affected_rows": 8,
+    "seconds_behind_master": null
+  }
+}

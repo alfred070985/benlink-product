@@ -1,0 +1,214 @@
+{
+  "status": 0,
+  "msg": "ok",
+  "data": {
+    "full_sql": "select top 1000 PoolType, Status, IsDelete, COUNT_BIG(1) AS ItemRows,\n       COUNT_BIG(DISTINCT ProductSysNo) AS ProductCount,\n       COUNT_BIG(DISTINCT ProductId) AS ProductIdCount\nFROM dbo.Product_Pool_Item\nGROUP BY PoolType, Status, IsDelete\nORDER BY PoolType, Status, IsDelete;",
+    "is_execute": false,
+    "checked": null,
+    "is_masked": true,
+    "query_time": 0.966511,
+    "mask_rule_hit": false,
+    "mask_time": 0.001131,
+    "warning": null,
+    "error": null,
+    "is_critical": false,
+    "rows": [
+      [
+        100,
+        -1,
+        1,
+        7,
+        7,
+        7
+      ],
+      [
+        100,
+        0,
+        0,
+        65820,
+        65820,
+        65820
+      ],
+      [
+        100,
+        0,
+        1,
+        6892,
+        6347,
+        6347
+      ],
+      [
+        100,
+        1,
+        0,
+        4620,
+        4299,
+        4299
+      ],
+      [
+        100,
+        1,
+        1,
+        544,
+        544,
+        544
+      ],
+      [
+        100,
+        2,
+        0,
+        2901,
+        2705,
+        2705
+      ],
+      [
+        200,
+        -1,
+        1,
+        23,
+        22,
+        22
+      ],
+      [
+        200,
+        1,
+        0,
+        3686,
+        3395,
+        3395
+      ],
+      [
+        200,
+        1,
+        1,
+        4213,
+        4213,
+        4213
+      ],
+      [
+        200,
+        2,
+        0,
+        1606,
+        1586,
+        1586
+      ],
+      [
+        300,
+        -1,
+        1,
+        753610,
+        25570,
+        25570
+      ],
+      [
+        300,
+        0,
+        0,
+        327596,
+        66934,
+        66934
+      ],
+      [
+        300,
+        0,
+        1,
+        13378,
+        10990,
+        10990
+      ],
+      [
+        300,
+        1,
+        0,
+        3593879,
+        25466,
+        25466
+      ],
+      [
+        300,
+        1,
+        1,
+        40087,
+        8684,
+        8684
+      ],
+      [
+        300,
+        2,
+        0,
+        260296,
+        11844,
+        11844
+      ],
+      [
+        400,
+        -1,
+        1,
+        1501372,
+        50125,
+        50125
+      ],
+      [
+        400,
+        0,
+        0,
+        919673,
+        65504,
+        65504
+      ],
+      [
+        400,
+        0,
+        1,
+        41065,
+        25361,
+        25361
+      ],
+      [
+        400,
+        1,
+        0,
+        6069335,
+        50360,
+        50360
+      ],
+      [
+        400,
+        1,
+        1,
+        141754,
+        32753,
+        32753
+      ],
+      [
+        400,
+        2,
+        0,
+        769928,
+        25201,
+        25201
+      ],
+      [
+        400,
+        2,
+        1,
+        4136,
+        2908,
+        2908
+      ]
+    ],
+    "column_list": [
+      "PoolType",
+      "Status",
+      "IsDelete",
+      "ItemRows",
+      "ProductCount",
+      "ProductIdCount"
+    ],
+    "column_type": [],
+    "status": null,
+    "affected_rows": 23,
+    "seconds_behind_master": null
+  }
+}

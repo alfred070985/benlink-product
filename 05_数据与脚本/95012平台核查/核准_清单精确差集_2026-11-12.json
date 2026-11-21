@@ -1,0 +1,24 @@
+{
+  "verified_at": "2026-11-12T14:35:00+08:00",
+  "platform": "95012（禄品供应商模式）",
+  "local_source": "Desktop/禄品的价格_筛选_2026-11-09.xlsx",
+  "method": "本地 P 码经 product 表映射为 SysNo/ProductBasicSysNo，与 Archery platform_product(PlatformSysNo=95012, IsDelete=0) 明细做精确差集",
+  "counts": {
+    "local_p_rows": 4940,
+    "platform_product_rows": 4940,
+    "active_platform_product_rows": 4940,
+    "active_platform_products": 4940,
+    "platform_website_rows": 19502,
+    "platform_exclusive_rows": 0,
+    "active_exclusive_products": 0
+  },
+  "mapping": {
+    "local_p_to_product_hit": 4940,
+    "local_p_unmatched_in_product": 0,
+    "sysno_vs_productsysno": {"intersection": 4940, "only_local": 0, "only_platform": 0},
+    "productbasic_vs_productbasic": {"intersection": 4940, "only_local": 0, "only_platform": 0},
+    "sysno_vs_productbasic_wrongpair": {"intersection": 45, "only_local": 4895, "only_platform": 4895},
+    "productbasic_vs_sysno_wrongpair": {"intersection": 45, "only_local": 4895, "only_platform": 4895}
+  },
+  "conclusion": "本地禄品4940清单与平台95012（禄品供应商模式）当前在售商品清单完全一致（正确配对字段交集均为4940，零差集），清单核准通过。"
+}

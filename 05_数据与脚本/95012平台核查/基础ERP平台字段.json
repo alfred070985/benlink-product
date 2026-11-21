@@ -1,0 +1,150 @@
+{
+  "status": 0,
+  "msg": "ok",
+  "data": {
+    "full_sql": "select top 1000 COLUMN_NAME, DATA_TYPE\nFROM INFORMATION_SCHEMA.COLUMNS\nWHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'Platform'\nORDER BY ORDINAL_POSITION;",
+    "is_execute": false,
+    "checked": null,
+    "is_masked": true,
+    "query_time": 0.03654,
+    "mask_rule_hit": false,
+    "mask_time": 0.000907,
+    "warning": null,
+    "error": null,
+    "is_critical": false,
+    "rows": [
+      [
+        "SysNo",
+        "int"
+      ],
+      [
+        "GroupSysNo",
+        "int"
+      ],
+      [
+        "PlatformName",
+        "nvarchar"
+      ],
+      [
+        "PlatformUrl",
+        "nvarchar"
+      ],
+      [
+        "ChargeSysNo",
+        "int"
+      ],
+      [
+        "Discount",
+        "int"
+      ],
+      [
+        "CustomerSysNo",
+        "int"
+      ],
+      [
+        "CustomerName",
+        "nvarchar"
+      ],
+      [
+        "PayType",
+        "int"
+      ],
+      [
+        "PayTypeName",
+        "nvarchar"
+      ],
+      [
+        "Remark",
+        "nvarchar"
+      ],
+      [
+        "AuditStatus",
+        "int"
+      ],
+      [
+        "AuditUserSysNo",
+        "int"
+      ],
+      [
+        "AuditTime",
+        "datetime"
+      ],
+      [
+        "Status",
+        "int"
+      ],
+      [
+        "IsDelete",
+        "bit"
+      ],
+      [
+        "CreateTime",
+        "datetime"
+      ],
+      [
+        "CreateUserSysNo",
+        "int"
+      ],
+      [
+        "LastUpdateUserSysNo",
+        "int"
+      ],
+      [
+        "LastUpdateTime",
+        "datetime"
+      ],
+      [
+        "ApiVersion",
+        "varchar"
+      ],
+      [
+        "ShipType",
+        "int"
+      ],
+      [
+        "PricingPower",
+        "int"
+      ],
+      [
+        "SourceSysNo",
+        "int"
+      ],
+      [
+        "CompanySysNo",
+        "int"
+      ],
+      [
+        "IsSyncCProductPrice",
+        "bit"
+      ],
+      [
+        "ProductPoolType",
+        "int"
+      ],
+      [
+        "DockingType",
+        "int"
+      ],
+      [
+        "IsPushProduct",
+        "bit"
+      ],
+      [
+        "TraceabilityPlatformId",
+        "varchar"
+      ],
+      [
+        "IsCheckOrderLimit",
+        "bit"
+      ]
+    ],
+    "column_list": [
+      "COLUMN_NAME",
+      "DATA_TYPE"
+    ],
+    "column_type": [],
+    "status": null,
+    "affected_rows": 31,
+    "seconds_behind_master": null
+  }
+}

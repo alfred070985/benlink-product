@@ -1,0 +1,11 @@
+{
+  "active_channel_products": 377848,
+  "processed_products": 377848,
+  "price_records": 377848,
+  "products_without_price_record": 0,
+  "remaining_unprocessed": 0,
+  "coverage_complete": true,
+  "time_filter": null,
+  "elapsed_seconds": 254.99,
+  "output": "/Users/duxun/Documents/kimi/tasks/2026-10-29/19-47-39-2c61d47a/channel_product_price_records.jsonl"
+}
