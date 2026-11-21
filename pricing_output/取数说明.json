@@ -1,0 +1,36 @@
+{
+  "pulled_at": "2026-11-13T15:46:31",
+  "source": "本来生活 ERP 只读接口 ProLhotse/GetListByBasic（接口文档：仅 SELECT product_channel_info / 价格表）",
+  "read_only": true,
+  "side_effects": "未写库、未发事件、未调用任何更新接口、未修改任何源表",
+  "baseline": "/Users/alfredmini/ai-workspace/projects/benlink-product/01_源数据/禄品4940_筛选表_2026-11-09.xlsx",
+  "baseline_pcodes": 4940,
+  "batch_size": 200,
+  "records": 57592,
+  "failed_batches": [],
+  "status_enum": {
+    "-1": "作废",
+    "0": "有效（未展示）",
+    "1": "上架（展示）"
+  },
+  "fields": [
+    "ProductID",
+    "ProductName",
+    "ProductBasicSysNo",
+    "ProductSysNo",
+    "WebSiteSysNo",
+    "ChannelSysNo",
+    "SaleChannelSysNo",
+    "Status",
+    "IsDelete",
+    "UnitCost",
+    "DefaultPurchasePrice",
+    "CurrentPrice",
+    "BasicPrice",
+    "IsDirectSend",
+    "OriginDirectDelivery",
+    "BenlaiCouldDirectDelivery"
+  ],
+  "output": "/Users/alfredmini/benlink_product/pricing_output/源数据_ERP站点成本_2026-11-13.jsonl",
+  "elapsed_seconds": 32.66
+}

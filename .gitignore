@@ -1,0 +1,26 @@
+# ===== 凭证与安全（绝不入库） =====
+jdvop_pull/standalone/credentials.json
+**/credentials.json
+*.key
+.secrets/
+
+# ===== WorkBuddy 个人工作数据 =====
+.workbuddy/
+
+# ===== 系统垃圾 =====
+__pycache__/
+*.pyc
+.DS_Store
+.DS_Store?
+
+# ===== 运行时临时 =====
+*.log
+nohup.out
+
+# ===== 已被新版取代的历史快照（内容已合并进 11-20/11-21 版）=====
+jdvop_pull/output/猫超详情_全量_2026-11-19.jsonl
+jdvop_pull/output/猫超SKU_全量_2026-11-19.jsonl
+jdvop_pull/output/猫超商品宽表SKU级_2026-11-20.csv
+jdvop_pull/output/猫超产品_list_10000个_*
+pricing_output/源数据_天镜价格历史全量_2026-11-16.jsonl
+pricing_output/源数据_天镜同品映射_2026-11-16.jsonl

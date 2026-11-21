@@ -1,0 +1,36 @@
+{
+  "pulled_at": "2026-11-19T18:19:33",
+  "source": "本来生活 ERP 只读接口 ProLhotse/GetListByBasic（仅 SELECT product_channel_info / 价格表）",
+  "read_only": true,
+  "side_effects": "未写库、未发事件、未调用任何更新接口",
+  "baseline": "/Users/alfredmini/benlink_product/pricing_output/标准池_四站全上架有库存_2026-11-19.jsonl",
+  "baseline_pcodes": 75067,
+  "batch_size": 200,
+  "records": 489856,
+  "failed_batches": [],
+  "status_enum": {
+    "-1": "作废",
+    "0": "有效（未展示）",
+    "1": "上架（展示）"
+  },
+  "fields": [
+    "ProductID",
+    "ProductName",
+    "ProductBasicSysNo",
+    "ProductSysNo",
+    "WebSiteSysNo",
+    "ChannelSysNo",
+    "SaleChannelSysNo",
+    "Status",
+    "IsDelete",
+    "UnitCost",
+    "DefaultPurchasePrice",
+    "CurrentPrice",
+    "BasicPrice",
+    "IsDirectSend",
+    "OriginDirectDelivery",
+    "BenlaiCouldDirectDelivery"
+  ],
+  "output": "/Users/alfredmini/benlink_product/pricing_output/源数据_标准池ERP站点成本_2026-11-19.jsonl",
+  "elapsed_seconds": 258.02
+}

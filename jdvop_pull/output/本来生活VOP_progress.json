@@ -1,0 +1,62 @@
+{
+  "240913": {
+    "offset": 10025623105194,
+    "pages": 155,
+    "done": true,
+    "skus": 15478
+  },
+  "250121": {
+    "offset": 10057753879205,
+    "pages": 56,
+    "done": true,
+    "skus": 5512
+  },
+  "250123": {
+    "offset": 10088000079426,
+    "pages": 94,
+    "done": true,
+    "skus": 9356
+  },
+  "250908": {
+    "offset": 100259147244,
+    "pages": 64,
+    "done": true,
+    "skus": 6341
+  },
+  "25090811": {
+    "offset": 100437217816,
+    "pages": 10,
+    "done": true,
+    "skus": 932
+  },
+  "20260121": {
+    "offset": 100310800626,
+    "pages": 6,
+    "done": true,
+    "skus": 526
+  },
+  "20260203": {
+    "offset": 100315252742,
+    "pages": 6,
+    "done": true,
+    "skus": 559
+  },
+  "20260204": {
+    "offset": 100308821728,
+    "pages": 5,
+    "done": true,
+    "skus": 422
+  },
+  "20260413": {
+    "offset": 100300878122,
+    "pages": 4,
+    "done": true,
+    "skus": 331
+  },
+  "260511": {
+    "offset": 100357408662,
+    "pages": 72,
+    "done": true,
+    "skus": 7178
+  }
+}

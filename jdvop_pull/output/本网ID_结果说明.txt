@@ -1,0 +1,45 @@
+京东 VOP 全量商品 · 本网 ID 二次加工结果说明
+生成时间：2026-11-13T11:55:12
+
+一、你确认的口径
+- 映射主口径：分销商品池 benlai_business_product.product 的 JdGoodsId 直连
+- 商品 ID：P 码（bl_product_code）与主商品编号（bl_product_sysno）都给
+- 类目：本网三级类目 ID（bl_c1_id / bl_c2_id / bl_c3_id）；品牌：bl_brand_id；均不含名称
+- 匹配不上或存在歧义：ID 留空，用 match_source / conflict_with_goods_map 标记，一行不丢
+
+二、字段来源（重要：两种商品 ID 不是一回事）
+- bl_product_code  ← product.ProductId，P 码，形如 P0000102903
+- bl_product_sysno ← product.ProductBasicSysNo，C 网主商品编号，数字
+- bl_c1_id / bl_c2_id / bl_c3_id ← product.C1SysNo / C2SysNo / C3SysNo
+- bl_brand_id ← product.BrandSysNo
+- 主商品表 benlai_product.product_basic_info 的 SysNo / C1SysNo 等字段本次未混用，避免两套口径串味
+
+三、match_source 取值
+- dist_product_pool：分销池命中且 P 码唯一，ID 已补齐
+- ambiguous_pcode：同一京东 SKU 在有效记录里对应多个不同 P 码，未替业务裁决，ID 留空
+- inactive_only：只有已删除/失效记录，ID 留空
+- unmatched：分销池无此京东 SKU，ID 留空
+
+四、conflict_with_goods_map 取值
+- 1：t_goods_map 给出的 P 码与分销池不一致（按你的口径以分销池为准，仅标记、不覆盖）
+- goods_map_only：分销池没匹配上，但 t_goods_map 有记录（仅提示、不自动补）
+- 0：无差异
+- 调研阶段按「取分销池首条记录」的算法统计到 744 个 SKU 的 P 码与 t_goods_map 不一致；本次按「不自动裁决」把同一 SKU 对应多个 P 码的记录留空，因此标 1 的冲突行数少于 744，其余都落在待确认明细里。
+- 补齐率 96.2% 低于调研时的 99.3%，原因正是这批多 P 码记录按口径留空，不是查询失败或数据丢失。
+
+五、对账
+- 原表 46635 行 / 32 列 → 新表 46635 行 / 40 列
+- 原 32 列内容逐行未改动：True
+- match_source 分布：dist_product_pool=44884, ambiguous_pcode=1440, unmatched=311
+- conflict_with_goods_map 分布：1=71 行（两路径 P 码不一致）；goods_map_only=1592 行（分销池未命中但 t_goods_map 有记录）；其余为 0
+- 新 ID 列有值行数：bl_product_code=44884, bl_product_sysno=44884, bl_c1_id=44884, bl_c2_id=44884, bl_c3_id=44884, bl_brand_id=44884
+
+六、待确认明细
+- 本网ID_待确认.csv：1751 行，列出所有 ID 留空的记录，附分销池候选 P 码与 t_goods_map 参考 P 码，供人工拍板；本工具不代为选择。
+
+七、安全
+- 线上库仅执行只读 SELECT；未写生产库、未发商品变更事件、未调用京东接口、未生成 token。
+- t_goods_map 只用于标记差异，未用于覆盖或补齐主口径。
+
+八、复跑
+执行 enrich_bl_ids.py 即可重新按线上最新分销池数据生成，原 CSV 不会被修改。

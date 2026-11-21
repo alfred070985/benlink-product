@@ -1,0 +1,33 @@
+{
+  "finished_at": "2026-11-13T11:17:19",
+  "mode": "full",
+  "pools": [
+    "240913",
+    "250121",
+    "250123",
+    "250908",
+    "25090811",
+    "20260121",
+    "20260203",
+    "20260204",
+    "20260413",
+    "260511"
+  ],
+  "accounts": [
+    {
+      "account": "本来生活VOP",
+      "status": "ok",
+      "skus": 46635,
+      "failures": 0,
+      "csv": "/Users/alfredmini/benlink_product/jdvop_pull/output/本来生活VOP_goods.csv",
+      "raw": "/Users/alfredmini/benlink_product/jdvop_pull/output/本来生活VOP_raw.jsonl"
+    },
+    {
+      "account": "benlailife717",
+      "status": "skipped_no_cached_token",
+      "skus": 0
+    }
+  ],
+  "token_rule": "只读线上 Redis 缓存；缺失即停止，未调用任何授权/刷新接口",
+  "side_effects": "未写生产库、未发商品变更事件、未调用线上同步接口"
+}

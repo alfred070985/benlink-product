@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>两大货盘 · 全流程链路说明</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+         background: #f5f5f3; color: #2c2c2a; line-height: 1.65; font-size: 14px; }
+  .page { max-width: 1080px; margin: 0 auto; padding: 32px 24px 64px; }
+
+  .hero { background: #fff; border: 0.5px solid #d3d1c7; border-radius: 12px;
+          padding: 28px 32px; margin-bottom: 24px; }
+  .hero h1 { font-size: 22px; font-weight: 600; margin-bottom: 8px; }
+  .hero .sub { color: #5f5e5a; font-size: 13px; margin-bottom: 16px; }
+  .hero .oneline { background: #eeedfe; border-radius: 8px; padding: 12px 16px;
+                   font-size: 13.5px; color: #26215c; }
+  .hero .oneline b { font-weight: 600; }
+  .meta-row { display: flex; gap: 12px; margin-top: 14px; flex-wrap: wrap; }
+  .meta-chip { font-size: 12px; color: #444441; background: #f1efe8;
+               border-radius: 6px; padding: 4px 10px; }
+  .meta-chip b { color: #26215c; font-weight: 600; }
+
+  .deck { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 28px; }
+  .deck-card { border-radius: 12px; padding: 20px 24px; border: 0.5px solid; cursor: default; }
+  .deck-card.p1 { background: #EAF3DE; border-color: #3B6D11; }
+  .deck-card.p2 { background: #E6F1FB; border-color: #185FA5; }
+  .deck-card .t { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+  .deck-card.p1 .t { color: #173404; } .deck-card.p2 .t { color: #042C53; }
+  .deck-card .s { font-size: 12px; margin-bottom: 10px; }
+  .deck-card.p1 .s { color: #27500A; } .deck-card.p2 .s { color: #0C447C; }
+  .deck-card .d { font-size: 12.5px; }
+  .deck-card.p1 .d { color: #444441; } .deck-card.p2 .d { color: #444441; }
+  .deck-card .big { font-size: 22px; font-weight: 600; margin: 8px 0 2px; }
+  .deck-card.p1 .big { color: #3B6D11; } .deck-card.p2 .big { color: #185FA5; }
+  .deck-card .cap { font-size: 11.5px; color: #888780; }
+
+  .section-title { font-size: 16px; font-weight: 600; margin: 36px 0 6px;
+                   padding-left: 10px; border-left: 3px solid #534ab7; }
+  .section-sub { color: #888780; font-size: 12.5px; margin-bottom: 14px; }
+
+  .funnel { display: flex; align-items: stretch; background: #fff;
+            border: 0.5px solid #d3d1c7; border-radius: 12px;
+            padding: 18px 16px; margin-bottom: 20px; overflow-x: auto; }
+  .fstep { flex: 1; min-width: 118px; text-align: center; padding: 0 6px; }
+  .fnum { font-size: 22px; font-weight: 600; color: #185fa5; }
+  .flabel { font-size: 11.5px; color: #5f5e5a; margin-top: 4px; }
+  .farrow { align-self: center; color: #b4b2a9; font-size: 17px; flex: 0 0 auto; }
+  .fstep.final .fnum { color: #3b6d11; }
+
+  .stage { background: #fff; border: 0.5px solid #d3d1c7; border-radius: 12px; }
+  .stage-head { display: flex; align-items: center; gap: 14px;
+                padding: 15px 24px; border-bottom: 0.5px solid #eceae4; }
+  .stage-no { width: 32px; height: 32px; border-radius: 50%; background: #e6f1fb;
+              color: #185fa5; display: flex; align-items: center; justify-content: center;
+              font-weight: 600; font-size: 14px; flex: 0 0 auto; }
+  .stage-title { font-size: 15px; font-weight: 600; }
+  .stage-big { margin-left: auto; text-align: right; }
+  .stage-big .n { font-size: 21px; font-weight: 600; color: #185fa5; }
+  .stage-big .t { font-size: 11px; color: #5f5e5a; }
+  .stage-body { padding: 13px 24px 17px; display: grid;
+                grid-template-columns: 1fr 1fr; gap: 11px 24px; }
+  .kv { font-size: 12.5px; }
+  .kv .k { color: #888780; margin-bottom: 2px; font-size: 11.5px; }
+  .kv .v { color: #2c2c2a; }
+  .kv .v code { background: #f1efe8; border-radius: 4px; padding: 1px 6px;
+                font-family: "SF Mono", Menlo, monospace; font-size: 11.5px; }
+  .rule-box { grid-column: 1 / -1; background: #faf9f6;
+              border: 0.5px solid #e5e3db; border-radius: 8px;
+              padding: 10px 14px; font-size: 12.5px; color: #444441; }
+  .rule-box b { color: #2c2c2a; }
+  .tag { display: inline-block; font-size: 11px; border-radius: 5px; padding: 1px 8px;
+         margin-right: 6px; font-weight: 500; }
+  .tag.erp { background: #e6f1fb; color: #185fa5; }
+  .tag.db { background: #eeedfe; color: #534ab7; }
+  .tag.algo { background: #e1f5ee; color: #0f6e56; }
+  .tag.user { background: #faeeda; color: #854f0b; }
+  .tag.warn { background: #fcebeb; color: #a32d2d; }
+  .connector { width: 2px; height: 24px; background: #b4b2a9; margin: 0 auto; }
+
+  .final-card { background: #fff; border: 1px solid #97c459; border-radius: 12px; overflow: hidden; }
+  .final-head { background: #eaf3de; padding: 17px 24px; display: flex; align-items: center; gap: 14px; }
+  .final-head .n { font-size: 20px; font-weight: 600; color: #27500a; }
+  .final-head .file { font-family: "SF Mono", Menlo, monospace; font-size: 12.5px; color: #3b6d11; }
+  .final-body { padding: 16px 24px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .stat-chip { background: #faf9f6; border: 0.5px solid #e5e3db; border-radius: 8px; padding: 10px 14px; }
+  .stat-chip .n { font-size: 19px; font-weight: 600; color: #2c2c2a; }
+  .stat-chip .t { font-size: 11.5px; color: #888780; margin-top: 2px; }
+  .stat-chip.hi .n { color: #3b6d11; } .stat-chip.warn .n { color: #854f0b; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; background: #fff; }
+  th, td { text-align: left; padding: 9px 14px; border-bottom: 0.5px solid #eceae4; vertical-align: top; }
+  th { background: #f1efe8; color: #444441; font-weight: 600; font-size: 12px; }
+  .table-wrap { border: 0.5px solid #d3d1c7; border-radius: 12px; overflow: hidden; }
+
+  .file-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .file-item { background: #fff; border: 0.5px solid #d3d1c7; border-radius: 8px; padding: 10px 14px; font-size: 12px; }
+  .file-item .fn { font-family: "SF Mono", Menlo, monospace; font-size: 11.5px; color: #185fa5; word-break: break-all; }
+  .file-item .fd { color: #888780; margin-top: 3px; }
+
+  .notice { background: #faeeda; border: 0.5px solid #ef9f27; border-radius: 12px;
+            padding: 16px 24px; margin-top: 24px; }
+  .notice h3 { font-size: 14px; color: #633806; margin-bottom: 8px; }
+  .notice p { font-size: 12.5px; color: #633806; margin-bottom: 6px; }
+  .notice p:last-child { margin-bottom: 0; } .notice b { font-weight: 600; }
+
+  @media (max-width: 760px) {
+    .stage-body, .final-body, .deck, .file-list { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ============ 头部 ============ -->
+  <div class="hero">
+    <h1>两大货盘 · 全流程链路</h1>
+    <div class="sub">本来生活分销定价全景 · 更新至 2026-11-21 · 上篇：本来定制货盘（周频滚动） · 下篇：技术公司全货盘（三货源整合）</div>
+    <div class="oneline">
+      一句话记住两个货盘：<b>货盘一</b>是"给本来生活供货的定制池"，成本用本来 ERP 口径；<b>货盘二</b>是"技术公司自己做生意的全货盘"，本网+京东VOP+猫超三方进货价都是地盘成本。
+    </div>
+    <div class="meta-row">
+      <span class="meta-chip">起点 <b>traceid 9ef0b69a…</b>（母池全量）</span>
+      <span class="meta-chip">三货源 <b>本网 · 京东VOP · 猫超</b></span>
+      <span class="meta-chip">统一加价 <b>直发 2 / 5 / 8%</b></span>
+      <span class="meta-chip">空间底线 <b>≥10%</b></span>
+    </div>
+  </div>
+
+  <!-- ============ 两货盘总览 ============ -->
+  <div class="deck">
+    <div class="deck-card p1">
+      <div class="t">货盘一 · 本来定制货盘</div>
+      <div class="s">只供货本来生活体系 · 周频滚动</div>
+      <div class="big">75,067 品</div>
+      <div class="cap">四站全上架+有库存 · ERP 成本 · 天镜/京东对标 · 空间率≥10%</div>
+      <div class="d" style="margin-top:8px">成品：分销标准池定价表（三档价+建议档）</div>
+    </div>
+    <div class="deck-card p2">
+      <div class="t">货盘二 · 技术公司全货盘</div>
+      <div class="s">自营供应链 · 三货源整合 · 2026-11-21 首版</div>
+      <div class="big">322,658 行</div>
+      <div class="cap">三表并集 · 同品组关联 · 跨货源组 7,650 个 · 空间率≥10%</div>
+      <div class="d" style="margin-top:8px">成品：全货盘聚合表（成本+三档价+市场价）</div>
+    </div>
+  </div>
+
+  <!-- ============ 上篇：货盘一 ============ -->
+  <h2 class="section-title">上篇 · 货盘一：本来定制货盘（2026-11-19 数据 · 周频）</h2>
+  <div class="section-sub">从母池到标准池的漏斗，6 步只读链路，全部口径用户拍板</div>
+
+  <div class="funnel">
+    <div class="fstep"><div class="fnum">402,567</div><div class="flabel">四站上架关系</div></div>
+    <div class="farrow">→</div>
+    <div class="fstep"><div class="fnum">80,364</div><div class="flabel">四站全上架</div></div>
+    <div class="farrow">→</div>
+    <div class="fstep"><div class="fnum">75,067</div><div class="flabel">四站都有库存</div></div>
+    <div class="farrow">→</div>
+    <div class="fstep"><div class="fnum">489,856</div><div class="flabel">ERP成本明细</div></div>
+    <div class="farrow">→</div>
+    <div class="fstep"><div class="fnum">21,443</div><div class="flabel">真实京东对标</div></div>
+    <div class="farrow">→</div>
+    <div class="fstep final"><div class="fnum">75,067</div><div class="flabel">定价成品行数</div></div>
+  </div>
+
+  <div class="stage">
+    <div class="stage-head">
+      <div class="stage-no">1</div>
+      <div class="stage-title">拉母池 → 四站全上架 → 有库存 → 取成本 → 配对标</div>
+      <div class="stage-big"><div class="n">6 步</div><div class="t">全部只读</div></div>
+    </div>
+    <div class="stage-body">
+      <div class="kv"><div class="k">链路</div><div class="v"><code>pull_pool_sites</code> → <code>aggregate</code> → <code>filter_stock</code> → <code>pull_costs + pull_info</code> → <code>match_vop</code> → <code>build_pricing</code></div></div>
+      <div class="kv"><div class="k">数据源</div><div class="v"><span class="tag erp">ERP接口</span>GetProductPager / GetListByBasic <span class="tag db">archery</span>库存表 / product 表</div></div>
+      <div class="kv"><div class="k">成本口径</div><div class="v">展示状态优先→未展示回退，作废排除；直发采购价 / 仓发含税优先，单站最高</div></div>
+      <div class="kv"><div class="k">对标价</div><div class="v">天镜人工核实（同款/不同规折算/相似参考）→ 算法相似≥75 采信 → VOP 备选 → ERP基准价兜底</div></div>
+      <div class="rule-box"><b>关键教训：</b>分页 list 深度限 5000（第51页起报错），全量必须用 <b>scroll 模式</b>；天镜映射的 <code>internal_code</code> 带 P 前缀，去 P 才是商品编号；发货类型看 <code>OriginDirectDelivery</code>（IsDirectSend 不可靠，已用禄品池标定）。</div>
+    </div>
+  </div>
+
+  <div class="connector"></div>
+
+  <div class="stage">
+    <div class="stage-head">
+      <div class="stage-no">2</div>
+      <div class="stage-title">定价成品：三档价 + 建议档</div>
+      <div class="stage-big"><div class="n">31 列</div><div class="t">直发2/5/8 · 仓发5/12/24</div></div>
+    </div>
+    <div class="stage-body">
+      <div class="kv"><div class="k">成品</div><div class="v"><code>分销标准池定价_2026-11-19.xlsx</code>（75,067 行）</div></div>
+      <div class="kv"><div class="k">建议档规则 <span class="tag user">拍板</span></div><div class="v">默认中档；空间&lt;10% 降档①；中档空间≥30% 且档③仍≥10% 升档③；ERP 兜底价不升档（空间失真）</div></div>
+      <div class="kv"><div class="k">结果</div><div class="v">真实对标 21,443（28.6%，空间率中位 15.4%）；ERP 兜底 53,149（保守中档）</div></div>
+      <div class="kv"><div class="k">周频机制</div><div class="v"><code>build_chain_report.py</code> 读当轮数据自动生成链路 HTML，数字每周滚动</div></div>
+    </div>
+  </div>
+
+  <!-- ============ 下篇：货盘二 ============ -->
+  <h2 class="section-title">下篇 · 货盘二：技术公司全货盘（2026-11-21 首版）</h2>
+  <div class="section-sub">三货源整合：三方给的进货价都是地盘成本，卖的是完整供应链</div>
+
+  <h2 class="section-title" style="border-left-color:#185FA5">第一步：三底表就位</h2>
+  <div class="table-wrap">
+    <table>
+      <tr><th>底表</th><th>规模</th><th>成本（进货价）</th><th>市面价格</th></tr>
+      <tr><td>本网（ERP 商品池）</td><td>75,067 品</td><td>ERP 口径（展示优先/含税/采购价）</td><td>天镜/京东对标（2.1 万）+ 猫超折算补（960）</td></tr>
+      <tr><td>京东 VOP</td><td>44,387 SKU</td><td>sale_price 协议价</td><td>jd_price C 端价</td></tr>
+      <tr><td>猫超（天猫超市企业购）</td><td>144,845 品 / 813,572 SKU 行</td><td>SKU 供货价（含税，中位=C端6折）</td><td>券后价（回退一口价）</td></tr>
+    </table>
+  </div>
+  <div class="stage" style="margin-top:14px">
+    <div class="stage-body" style="padding-top:14px">
+      <div class="rule-box"><b>猫超数据怎么来的（新打通）：</b>tvopx 仓库 <code>maochao-sdk</code> → Python 直连阿里 TOP 协议。<b>list 接口深度限 5000，全量必须 scroll 模式</b>（14.7 万品 17 分钟）；价格分两个接口：详情自带一口价，供货价/券后价要按 price_type 单独查（CHANNEL_PRICE=协议价·98%覆盖，COUPON_PRICE=券后价·98%，<b>建议零售价字段猫超未启用·0%覆盖</b>）；金额单位全是<b>分</b>。约 2% 品 NOT_AUTH（详情查不了但价格能查）。</div>
+    </div>
+  </div>
+
+  <div class="connector"></div>
+
+  <h2 class="section-title" style="border-left-color:#185FA5">第二步：同品组识别（group_id）</h2>
+  <div class="table-wrap">
+    <table>
+      <tr><th>对齐路径</th><th>命中率</th><th>说明</th></tr>
+      <tr><td>条码：本网 ↔ 猫超</td><td>2.0%</td><td><b>失效</b>：猫超"条码"多为 24 开头渠道内部码，与品牌 EAN 不互通（双方登记品牌码的才撞上）</td></tr>
+      <tr><td>相似度：本网 ↔ 猫超</td><td>+0.2%</td><td>score_pair ≥75 采信；诊断证实两池商品组合真实重叠低（生鲜/区域品猫超没有），0.6-0.75 压 1,674 个未采信</td></tr>
+      <tr><td>相似度：京东 ↔ 本网</td><td><b>50.0%</b>（16,429）</td><td>京东 VOP 本就是精选对标池，重叠度高</td></tr>
+      <tr><td>相似度：京东 ↔ 猫超</td><td>0.4%（117）</td><td>直接对齐少，靠本网间接传递成团</td></tr>
+    </table>
+  </div>
+  <div class="stage" style="margin-top:14px">
+    <div class="stage-body" style="padding-top:14px">
+      <div class="rule-box"><b>同品组 = 并查集：</b>三份对齐关系合并 + 传递成团（如 京东-本网-猫超 三方同品自动连成一组）。产出 <b>跨货源同品组 7,650 个</b>——同一实物多个进货价摆在一起，"从哪进"一眼可见。</div>
+      <div class="rule-box"><b>踩过的最大的坑：</b>本网 <code>productSysNo</code> 与 <code>productBasicSysNo</code> 是两套<b>会撞号</b>的编号空间（例：psys=216948 的品 pbasic=316578，而 psys=316578 是另一本书）——所有跨表关联必须用同一套 ID（统一 pbasic），否则并查集乱配。</div>
+    </div>
+  </div>
+
+  <div class="connector"></div>
+
+  <h2 class="section-title" style="border-left-color:#185FA5">第三步：任务 1 · 猫超折算补本网市场价</h2>
+  <div class="stage">
+    <div class="stage-head">
+      <div class="stage-no">补</div>
+      <div class="stage-title">无京东对标品，用猫超券后价折算市场价</div>
+      <div class="stage-big"><div class="n">960</div><div class="t">个品生效</div></div>
+    </div>
+    <div class="stage-body">
+      <div class="kv"><div class="k">折算公式 <span class="tag user">拍板</span></div><div class="v">单件价 = 猫超券后价 ÷ 猫超件数；本网预估市场价 = 单件价 × 本网件数（基础规格不同再按净含量折算）</div></div>
+      <div class="kv"><div class="k">取值</div><div class="v">券后价为主（98%覆盖），无券后价回退一口价；SPU 代表价 = SPU 价或 SKU 最低价</div></div>
+      <div class="rule-box"><b>现实预期：</b>本网↔猫超对齐只 2.2%，任务 1 覆盖 960 个品（非预想的 5.3 万）——猫超的价值在"全货盘第三货源"，不在给本网品对标。</div>
+    </div>
+  </div>
+
+  <div class="connector"></div>
+
+  <h2 class="section-title" style="border-left-color:#185FA5">第四步：全货盘聚合表</h2>
+  <div class="final-card">
+    <div class="final-head">
+      <div class="n">322,658 行 · 三表并集</div>
+      <div class="file">全货盘聚合表_2026-11-21.csv</div>
+    </div>
+    <div class="final-body">
+      <div class="stat-chip hi"><div class="n">66,011</div><div class="t">本网行（88% 入选）</div></div>
+      <div class="stat-chip"><div class="n">18,402</div><div class="t">京东VOP 行（56%）</div></div>
+      <div class="stat-chip"><div class="n">238,245</div><div class="t">猫超行（30%，低价品加价空间薄）</div></div>
+      <div class="stat-chip hi"><div class="n">7,650</div><div class="t">跨货源同品组（成本择优一目了然）</div></div>
+      <div class="stat-chip"><div class="n">档② 21.4万</div><div class="t">建议档分布：中档为主，降档 5.8万 / 升档 5.1万</div></div>
+      <div class="stat-chip warn"><div class="n">91万→32万</div><div class="t">空间率≥10% 过滤（猫超行淘汰最多：券后价≈供货价，加价即超）</div></div>
+    </div>
+  </div>
+  <div class="stage" style="margin-top:14px">
+    <div class="stage-body" style="padding-top:14px">
+      <div class="rule-box"><b>每行结构：</b>group_id | 货源 | 商品名/品牌/类目/规格/条码 | 成本（该货源进货价）| 档①②③（成本×1.02/1.05/1.08）| 建议档+建议输出价 | 市面价格+来源 | 空间率。<b>统一直发档</b>（用户拍板）；空间率≥10% 才保留。</div>
+      <div class="rule-box"><b>倒挂提醒：</b>猫超存在券后价&lt;供货价的倒挂品（如海苔脆券后 26.7 vs 供货 27.18）——空间率过滤天然排除，宽表另有"券后毛利比"列可单独筛查。</div>
+    </div>
+  </div>
+
+  <!-- ============ 交付物清单 ============ -->
+  <h2 class="section-title">交付物清单</h2>
+  <div class="file-list">
+    <div class="file-item"><div class="fn">allpool_output/全货盘聚合表_2026-11-21.csv</div><div class="fd">货盘二成品 · 322,658 行</div></div>
+    <div class="file-item"><div class="fn">pricing_output/分销标准池定价_2026-11-19.xlsx</div><div class="fd">货盘一成品 · 75,067 行 · 周频滚动</div></div>
+    <div class="file-item"><div class="fn">jdvop_pull/output/猫超商品宽表SKU级_2026-11-21.csv</div><div class="fd">猫超底表 · 813,572 行 · 四价+折扣率+券后毛利比</div></div>
+    <div class="file-item"><div class="fn">allpool_output/对齐_本网猫超.jsonl / 对齐_京东_bl.jsonl / 对齐_京东_mc.jsonl</div><div class="fd">同品组三份对齐关系</div></div>
+    <div class="file-item"><div class="fn">allpool_output/任务1_猫超市场价.jsonl</div><div class="fd">960 个本网品的猫超折算市场价</div></div>
+    <div class="file-item"><div class="fn">allpool_output/*.py（extract/pull/match/task1/build 系列）</div><div class="fd">全货盘脚本链，断点续跑，可复跑</div></div>
+  </div>
+
+  <div class="notice">
+    <h3>下一步可选方向</h3>
+    <p><b>1.</b> 猫超↔本网 0.6-0.75 的 2,684 个候选：降阈值可回收，但需人工抽检防误配。</p>
+    <p><b>2.</b> 任务 1 精化：从 SPU 代表价细化到 SKU 级规格匹配折算。</p>
+    <p><b>3.</b> 猫超底表像标准池一样做周频滚动（价格接口已通，automation 可配）。</p>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "筛选时间": "2026-11-19T18:14:46",
+  "候选商品数": 80364,
+  "四站都有库存商品数": 75067,
+  "失败批": [],
+  "库存口径": "Product_Inventory: IsDelete=0, Status=1, SaleQty>0, 四站(北京1/广州2/上海3/武汉7)均有记录",
+  "输出": "/Users/alfredmini/benlink_product/pricing_output/标准池_四站全上架有库存_2026-11-19.jsonl",
+  "耗时秒": 122.4
+}

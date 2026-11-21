@@ -1,0 +1,45 @@
+{
+  "generated_at": "2026-11-13T11:55:12",
+  "source": "/Users/alfredmini/benlink_product/jdvop_pull/output/本来生活VOP_goods.csv",
+  "output": "/Users/alfredmini/benlink_product/jdvop_pull/output/本来生活VOP_goods_本网ID.csv",
+  "source_rows": 46635,
+  "output_rows": 46635,
+  "columns": 40,
+  "base_columns_unchanged": true,
+  "pool_rows_read": 122588,
+  "pool_unique_skus": 109568,
+  "pool_ambiguous_skus": 5424,
+  "pending_review_rows": 1751,
+  "pending_review_file": "/Users/alfredmini/benlink_product/jdvop_pull/output/本网ID_待确认.csv",
+  "by_match_source": {
+    "ambiguous_pcode": 1440,
+    "conflict_rows": 71,
+    "dist_product_pool": 44884,
+    "goods_map_only_rows": 1592,
+    "unmatched": 311
+  },
+  "id_field_fill": {
+    "bl_product_code": 44884,
+    "bl_product_sysno": 44884,
+    "bl_c1_id": 44884,
+    "bl_c2_id": 44884,
+    "bl_c3_id": 44884,
+    "bl_brand_id": 44884
+  },
+  "id_field_fill_rate": {
+    "bl_product_code": "96.2%",
+    "bl_product_sysno": "96.2%",
+    "bl_c1_id": "96.2%",
+    "bl_c2_id": "96.2%",
+    "bl_c3_id": "96.2%",
+    "bl_brand_id": "96.2%"
+  },
+  "pool_scope": "benlai_business_product.product：JdGoodsId 直连，仅取有效记录（IsDelete<>1 且 ProductStatus<>-1）",
+  "goods_map_usage": "仅用于冲突标记与参考值，未覆盖主口径、未补数据、未裁决多 P 码歧义记录",
+  "user_decided": {
+    "mapping": "分销商品池为准",
+    "product_id": "P 码 + 主商品编号都给",
+    "category_brand": "三级类目 ID + 品牌 ID",
+    "unmatched": "留空并标记来源"
+  }
+}
