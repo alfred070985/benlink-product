@@ -12,7 +12,7 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "pricing_output"))
+sys.path.insert(0, str(Path(__file__).resolve().parent / "pricing_output"))
 from build_similarity import score_pair, brand_tokens, brand_main, model_code, pack_of, unit_price, num
 
 HERE = Path(__file__).resolve().parent

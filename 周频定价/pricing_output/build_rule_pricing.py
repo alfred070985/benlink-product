@@ -26,11 +26,11 @@ from openpyxl.utils import get_column_letter
 
 HERE = Path(__file__).resolve().parent
 PRICING_DIR = Path(os.environ.get("PRICING_DIR", HERE))
-REPO = Path(os.environ.get("BENLINK_REPO", HERE.parent.parent / "ai-workspace" / "projects" / "benlink-product"))
+REPO = Path(os.environ.get("BENLINK_REPO", Path(__file__).resolve().parents[3]))
 
-BASE_XLSX = REPO / "01_源数据" / "禄品4940_筛选表_2026-11-09.xlsx"
-JD_MAP_XLSX = REPO / "01_源数据" / "商品池10.29.xlsx"
-CHECK_XLSX = REPO / "02_报价表" / "禄品供应商模式_95012_成本及二次定价_2026-11-12.xlsx"
+BASE_XLSX = REPO / "95012禄品业务" / "01_源数据" / "禄品4940_筛选表_2026-11-09.xlsx"
+JD_MAP_XLSX = REPO / "95012禄品业务" / "01_源数据" / "商品池10.29.xlsx"
+CHECK_XLSX = REPO / "95012禄品业务" / "02_报价表" / "禄品供应商模式_95012_成本及二次定价_2026-11-12.xlsx"
 VOP_CSV = HERE.parent / "supply_pull" / "output" / "本来生活VOP_goods_本网ID.csv"
 HIST_XLSX = PRICING_DIR / "源数据_京东比价总表1.29.xlsx"
 ERP_JSONL = PRICING_DIR / "源数据_ERP站点成本_2026-11-13.jsonl"

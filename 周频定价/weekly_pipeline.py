@@ -19,7 +19,8 @@ import sys
 import time
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parent          # 周频定价/
+REPO_ROOT = ROOT.parent                          # 仓库根（00_项目汇总所在）
 PY = os.environ.get("WEEKLY_PY", str(Path.home() / "ai-workspace/local/venv/bin/python"))
 PRICING = ROOT / "pricing_output"
 ALLPOOL = ROOT / "allpool_output"
@@ -176,7 +177,7 @@ def phase_monday():
 
 def _upsert_inventory(moved):
     """交付文件清单.csv 按路径 upsert（R4/R6）。"""
-    inv = ROOT / "00_项目汇总" / "交付文件清单.csv"
+    inv = REPO_ROOT / "00_项目汇总" / "交付文件清单.csv"
     rows = {}
     if inv.exists():
         for l in inv.read_text(encoding="utf-8-sig").splitlines():

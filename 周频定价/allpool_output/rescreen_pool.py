@@ -23,7 +23,7 @@ from collections import Counter
 from datetime import datetime
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "pricing_output"))
+sys.path.insert(0, str(Path(__file__).resolve().parent / "pricing_output"))
 from build_standard_pool_pricing import resolve_cost, load_costs
 
 HERE = Path(__file__).resolve().parent

@@ -31,7 +31,7 @@ HIST_XLSX = PRICING_DIR / "源数据_京东比价总表1.29.xlsx"
 VOP_CSV = HERE.parent / "supply_pull" / "output" / "本来生活VOP_goods_本网ID.csv"
 PULL_META = PRICING_DIR / "取数说明.json"
 BASE_XLSX = Path(__import__("os").environ.get(
-    "BENLINK_REPO", HERE.parent.parent / "ai-workspace" / "projects" / "benlink-product"
+    "BENLINK_REPO", Path.home() / "ai-workspace" / "projects" / "benlink-product"
 )) / "01_源数据" / "禄品4940_筛选表_2026-11-09.xlsx"
 OUT = PRICING_DIR / "禄品分销商品定价_完整版_2026-11-16.xlsx"
 

@@ -1,5 +1,4 @@
 # ===== 凭证与安全（绝不入库） =====
-supply_pull/standalone/credentials.json
 **/credentials.json
 *.key
 .secrets/
@@ -9,7 +8,6 @@ supply_pull/standalone/credentials.json
 
 # ===== 系统垃圾 =====
 .DS_Store
-.DS_Store?
 __pycache__/
 *.py[cod]
 .venv/
@@ -25,12 +23,4 @@ config.local.yaml
 *.local.yaml
 .ai/local/
 archery_sqlquery.html
-
-# ===== 已被新版取代的历史快照（内容已合并进 11-20/11-21 版）=====
-supply_pull/output/猫超详情_全量_2026-11-19.jsonl
-supply_pull/output/猫超SKU_全量_2026-11-19.jsonl
-supply_pull/output/猫超商品宽表SKU级_2026-11-20.csv
-supply_pull/output/猫超产品_list_10000个_*
 weekly_work/
-.DS_Store
-__pycache__/

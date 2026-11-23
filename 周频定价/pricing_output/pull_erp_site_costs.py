@@ -20,8 +20,8 @@ import requests
 
 HERE = Path(__file__).resolve().parent
 PRICING_DIR = Path(os.environ.get("PRICING_DIR", HERE))
-REPO = Path(os.environ.get("BENLINK_REPO", HERE.parent.parent / "ai-workspace" / "projects" / "benlink-product"))
-SOURCE_XLSX = REPO / "01_源数据" / "禄品4940_筛选表_2026-11-09.xlsx"
+REPO = Path(os.environ.get("BENLINK_REPO", Path(__file__).resolve().parents[3]))
+SOURCE_XLSX = REPO / "95012禄品业务" / "01_源数据" / "禄品4940_筛选表_2026-11-09.xlsx"
 OUTPUT = PRICING_DIR / "源数据_ERP站点成本_2026-11-13.jsonl"
 META = PRICING_DIR / "取数说明.json"
 

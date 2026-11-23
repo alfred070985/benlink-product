@@ -20,7 +20,7 @@ from openpyxl.utils import get_column_letter
 
 HERE = Path(__file__).resolve().parent
 PRICING_DIR = Path(os.environ.get("PRICING_DIR", HERE))
-REPO = Path(os.environ.get("BENLINK_REPO", HERE.parent.parent / "ai-workspace" / "projects" / "benlink-product"))
+REPO = Path(os.environ.get("BENLINK_REPO", Path.home() / "ai-workspace" / "projects" / "benlink-product"))
 
 BASE_XLSX = REPO / "01_源数据" / "禄品4940_筛选表_2026-11-09.xlsx"
 HIST_XLSX = PRICING_DIR / "源数据_京东比价总表1.29.xlsx"

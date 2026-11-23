@@ -24,7 +24,7 @@ HERE = Path(__file__).resolve().parent
 PRICING_DIR = Path(os.environ.get("PRICING_DIR", HERE))
 CRED = Path(os.environ.get(
     "TIANJING_CRED",
-    HERE.parent.parent / "ai-workspace" / "local" / "tianjing_credentials.json",
+    Path.home() / "ai-workspace" / "local" / "tianjing_credentials.json",
 ))
 TODAY = datetime.now().strftime("%Y-%m-%d")
 

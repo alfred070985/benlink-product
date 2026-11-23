@@ -11,7 +11,7 @@ import json
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "pricing_output"))
+sys.path.insert(0, str(Path(__file__).resolve().parent / "pricing_output"))
 from build_similarity import parse_pack
 
 HERE = Path(__file__).resolve().parent
