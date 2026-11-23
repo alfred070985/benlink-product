@@ -257,14 +257,14 @@
     <div class="file-item"><div class="fn">pricing_output/分销标准池定价_2026-11-23.xlsx</div><div class="fd">货盘一成品 · 74,980 行（选品v2）</div></div>
     <div class="file-item"><div class="fn">allpool_output/全货盘聚合表_2026-11-23.csv</div><div class="fd">货盘二成品 · 322,503 行</div></div>
     <div class="file-item"><div class="fn">allpool_output/标准池_选品v2_2026-11-23.jsonl + 剔除清单</div><div class="fd">新底盘 74,980 + 87 个剔除原因</div></div>
-    <div class="file-item"><div class="fn">jdvop_pull/output/猫超商品宽表SKU级_2026-11-21.csv</div><div class="fd">猫超底表 · 813,572 行 · 四价+折扣率+券后毛利比</div></div>
+    <div class="file-item"><div class="fn">猫超商品宽表SKU级_2026-11-21.csv（已归档 交付物/2026-W47/03_底稿数据/）</div><div class="fd">猫超底表 · 813,572 行 · 四价+折扣率+券后毛利比 · 采集目录已改名 supply_pull（原 jdvop_pull）</div></div>
     <div class="file-item"><div class="fn">allpool_output/全链路说明_两大货盘_2026-11-23.html</div><div class="fd">本文件</div></div>
     <div class="file-item"><div class="fn">github.com/alfred070985/benlink-product（私有）</div><div class="fd">全量事实源 · 95012业务+两货盘 · LFS</div></div>
   </div>
 
   <div class="notice">
     <h3>下一步可选方向</h3>
-    <p><b>1.</b> 货盘一/二周频滚动：标准池链路已支持自动报告；猫超底表与聚合表可加 automation。</p>
+    <p><b>1.</b> <b>周频自动化已上线（2026-11-23 拍板）</b>：weekly_pipeline.py 三阶段——周日 20:00 外部货源刷新（VOP+猫超list+新品详情增量）→ 夜间猫超全量价格（约10h后台）→ 周一 06:30 主链 17 步+自动归档进交付物+登记清单+推送。哨兵文件衔接，价格未跑完不阻塞主链（回退上周价）。</p>
     <p><b>2.</b> 0.6-0.75 候选回收：猫超↔本网 1,674 + 京东↔猫超 1,000，降阈值需人工抽检。</p>
     <p><b>3.</b> 任务 1 精化：SPU 代表价细化到 SKU 级规格匹配折算。</p>
   </div>
