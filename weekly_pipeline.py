@@ -199,47 +199,69 @@ def archive():
     wdir = ROOT / "交付物" / WEEK
     (wdir / "01_货盘一_本来定制").mkdir(parents=True, exist_ok=True)
     (wdir / "02_货盘二_技术公司全货盘").mkdir(parents=True, exist_ok=True)
-    (wdir / "03_底稿数据").mkdir(parents=True, exist_ok=True)
+    for g in ("1_本来生活货盘", "2_京东VOP货盘", "3_天镜智价货盘", "4_猫超货盘", "5_跨源对齐"):
+        (wdir / "03_货盘底表" / g).mkdir(parents=True, exist_ok=True)
     log(f"归档到 {wdir.relative_to(ROOT)}")
+
+    BL = wdir / "03_货盘底表" / "1_本来生活货盘"
+    JD = wdir / "03_货盘底表" / "2_京东VOP货盘"
+    TJ = wdir / "03_货盘底表" / "3_天镜智价货盘"
+    MC = wdir / "03_货盘底表" / "4_猫超货盘"
+    AL = wdir / "03_货盘底表" / "5_跨源对齐"
+    # 天镜最新快照（日频任务刷新，每周把最新一份归档）
+    sys.path.insert(0, str(ALLPOOL))
+    from latest import latest
+    tj_hist = latest("pricing_output/源数据_天镜价格历史全量_*.jsonl")
+    tj_map = latest("pricing_output/源数据_天镜同品映射_*.jsonl")
 
     plan = [
         (PRICING / f"分销标准池定价_{TODAY}.xlsx", wdir / "01_货盘一_本来定制"),
         (PRICING / f"定价统计_{TODAY}.json", wdir / "01_货盘一_本来定制"),
         (ALLPOOL / f"全货盘聚合表_{TODAY}.csv", wdir / "02_货盘二_技术公司全货盘"),
-        # 本网底稿
-        (PRICING / f"源数据_分销池四站上架关系_{TODAY}.jsonl", wdir / "03_底稿数据"),
-        (PRICING / f"源数据_标准池ERP站点成本_{TODAY}.jsonl", wdir / "03_底稿数据"),
-        (PRICING / f"源数据_标准池商品信息_{TODAY}.jsonl", wdir / "03_底稿数据"),
-        (PRICING / f"标准池_四站全上架有库存_{TODAY}.jsonl", wdir / "03_底稿数据"),
-        (PRICING / f"标准池候选_四站全上架_{TODAY}.jsonl", wdir / "03_底稿数据"),
-        (PRICING / f"标准池京东相似匹配_{TODAY}.jsonl", wdir / "03_底稿数据"),
-        (ALLPOOL / f"标准池_选品v2_{TODAY}.jsonl", wdir / "03_底稿数据"),
-        (ALLPOOL / f"剔除清单_选品v2_{TODAY}.jsonl", wdir / "03_底稿数据"),
-        # 货盘二底稿（对齐文件在 allpool_output，文件名稳定）
-        (ALLPOOL / "对齐_本网猫超.jsonl", wdir / "03_底稿数据"),
-        (ALLPOOL / "对齐_京东_bl.jsonl", wdir / "03_底稿数据"),
-        (ALLPOOL / "对齐_京东_mc.jsonl", wdir / "03_底稿数据"),
-        (ALLPOOL / "任务1_猫超市场价.jsonl", wdir / "03_底稿数据"),
-        (ALLPOOL / "本网条码.jsonl", wdir / "03_底稿数据"),
-        (ALLPOOL / "猫超条码索引.jsonl", wdir / "03_底稿数据"),
-        # 外部货源底稿
-        (SUPPLY / "output" / "本来生活VOP_goods_本网ID.csv", wdir / "03_底稿数据"),
-        (SUPPLY / "output" / f"猫超商品宽表SKU级_{TODAY}.csv", wdir / "03_底稿数据"),
-        (SUPPLY / "output" / f"猫超产品_list全量147363个_{TODAY}.jsonl", wdir / "03_底稿数据"),
-        (SUPPLY / "output" / f"猫超详情_全量_{TODAY}.jsonl", wdir / "03_底稿数据"),
-        (SUPPLY / "output" / f"猫超SKU_全量_{TODAY}.jsonl", wdir / "03_底稿数据"),
-        (SUPPLY / "output" / f"猫超价格_全量_{TODAY}.jsonl", wdir / "03_底稿数据"),
+        # 本来生活货盘
+        (PRICING / f"源数据_分销池四站上架关系_{TODAY}.jsonl", BL),
+        (PRICING / f"源数据_标准池ERP站点成本_{TODAY}.jsonl", BL),
+        (PRICING / f"源数据_标准池商品信息_{TODAY}.jsonl", BL),
+        (PRICING / f"标准池_四站全上架有库存_{TODAY}.jsonl", BL),
+        (PRICING / f"标准池候选_四站全上架_{TODAY}.jsonl", BL),
+        (ALLPOOL / f"标准池_选品v2_{TODAY}.jsonl", BL),
+        (ALLPOOL / f"剔除清单_选品v2_{TODAY}.jsonl", BL),
+        (ALLPOOL / "本网条码.jsonl", BL),
+        # 京东VOP货盘
+        (SUPPLY / "output" / "本来生活VOP_goods_本网ID.csv", JD),
+        (PRICING / f"标准池京东相似匹配_{TODAY}.jsonl", JD),
+        # 天镜智价货盘
+        (tj_hist, TJ),
+        (tj_map, TJ),
+        # 猫超货盘
+        (SUPPLY / "output" / f"猫超商品宽表SKU级_{TODAY}.csv", MC),
+        (SUPPLY / "output" / f"猫超产品_list全量147363个_{TODAY}.jsonl", MC),
+        (SUPPLY / "output" / f"猫超详情_全量_{TODAY}.jsonl", MC),
+        (SUPPLY / "output" / f"猫超SKU_全量_{TODAY}.jsonl", MC),
+        (SUPPLY / "output" / f"猫超价格_全量_{TODAY}.jsonl", MC),
+        (ALLPOOL / "猫超条码索引.jsonl", MC),
+        # 跨源对齐
+        (ALLPOOL / "条码对齐_本网猫超.jsonl", AL),
+        (ALLPOOL / "对齐_本网猫超.jsonl", AL),
+        (ALLPOOL / "对齐_京东.jsonl", AL),
+        (ALLPOOL / "对齐_京东_bl.jsonl", AL),
+        (ALLPOOL / "对齐_京东_mc.jsonl", AL),
+        (ALLPOOL / "任务1_猫超市场价.jsonl", AL),
         # 取数说明（溯源凭证）
-        (PRICING / f"取数说明_分销池四站上架关系_{TODAY}.json", wdir / "03_底稿数据"),
-        (PRICING / f"取数说明_标准池ERP站点成本_{TODAY}.json", wdir / "03_底稿数据"),
-        (PRICING / f"取数说明_标准池商品信息_{TODAY}.json", wdir / "03_底稿数据"),
-        (PRICING / f"库存筛选说明_{TODAY}.json", wdir / "03_底稿数据"),
-        (PRICING / f"聚合说明_标准池候选_{TODAY}.json", wdir / "03_底稿数据"),
+        (PRICING / f"取数说明_分销池四站上架关系_{TODAY}.json", BL),
+        (PRICING / f"取数说明_标准池ERP站点成本_{TODAY}.json", BL),
+        (PRICING / f"取数说明_标准池商品信息_{TODAY}.json", BL),
+        (PRICING / f"库存筛选说明_{TODAY}.json", BL),
+        (PRICING / f"聚合说明_标准池候选_{TODAY}.json", BL),
     ]
     moved, missing = [], []
     for src, dst_dir in plan:
-        if not src.exists():
-            missing.append(src.name)
+        if src is None or not src.exists():
+            missing.append(getattr(src, "name", str(src)))
+            continue
+        if str(src).startswith(str(ROOT / "交付物")):
+            # 天镜等快照若本周没有新刷新，latest 会指到上周归档——不能从上周偷走，跳过并在说明里体现
+            missing.append(f"{src.name}（本周无新快照，沿用上周归档）")
             continue
         dst = dst_dir / src.name
         r = subprocess.run(["git", "mv", str(src.relative_to(ROOT)), str(dst.relative_to(ROOT))],
