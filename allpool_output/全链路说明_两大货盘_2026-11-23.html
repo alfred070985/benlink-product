@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>两大货盘 · 全流程链路说明（2026-11-23 定稿版）</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+         background: #f5f5f3; color: #2c2c2a; line-height: 1.65; font-size: 14px; }
+  .page { max-width: 1080px; margin: 0 auto; padding: 32px 24px 64px; }
+
+  .hero { background: #fff; border: 0.5px solid #d3d1c7; border-radius: 12px;
+          padding: 28px 32px; margin-bottom: 24px; }
+  .hero h1 { font-size: 22px; font-weight: 600; margin-bottom: 8px; }
+  .hero .sub { color: #5f5e5a; font-size: 13px; margin-bottom: 16px; }
+  .hero .oneline { background: #eeedfe; border-radius: 8px; padding: 12px 16px;
+                   font-size: 13.5px; color: #26215c; }
+  .hero .oneline b { font-weight: 600; }
+  .meta-row { display: flex; gap: 12px; margin-top: 14px; flex-wrap: wrap; }
+  .meta-chip { font-size: 12px; color: #444441; background: #f1efe8;
+               border-radius: 6px; padding: 4px 10px; }
+  .meta-chip b { color: #26215c; font-weight: 600; }
+
+  .formula { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 24px; }
+  .formula-card { border-radius: 12px; padding: 16px 24px; border: 0.5px solid; }
+  .formula-card.f1 { background: #EAF3DE; border-color: #3B6D11; }
+  .formula-card.f2 { background: #E6F1FB; border-color: #185FA5; }
+  .formula-card .eq { font-size: 14.5px; font-weight: 500; line-height: 1.9; }
+  .formula-card.f1 .eq { color: #173404; } .formula-card.f2 .eq { color: #042C53; }
+  .formula-card .eq .op { color: #888780; font-weight: 400; margin: 0 4px; }
+  .formula-card .note { font-size: 12px; margin-top: 6px; }
+  .formula-card.f1 .note { color: #27500A; } .formula-card.f2 .note { color: #0C447C; }
+
+  .role-band { background: #fff; border: 1px solid #7F77DD; border-radius: 12px;
+               overflow: hidden; margin-bottom: 28px; }
+  .role-head { background: #EEEDFE; padding: 14px 24px; font-size: 15px;
+               font-weight: 600; color: #26215C; }
+  .role-body { padding: 16px 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .role-cell { background: #faf9f6; border: 0.5px solid #e5e3db; border-radius: 10px; padding: 14px 16px; }
+  .role-cell h4 { font-size: 13.5px; margin-bottom: 8px; color: #2c2c2a; font-weight: 600; }
+  .role-cell p { font-size: 12.5px; color: #444441; margin-bottom: 4px; }
+  .role-cell .as-mirror { color: #185FA5; font-weight: 500; }
+  .role-cell .as-source { color: #3B6D11; font-weight: 500; }
+
+  .section-title { font-size: 16px; font-weight: 600; margin: 36px 0 6px;
+                   padding-left: 10px; border-left: 3px solid #534ab7; }
+  .section-sub { color: #888780; font-size: 12.5px; margin-bottom: 14px; }
+
+  .funnel { display: flex; align-items: stretch; background: #fff;
+            border: 0.5px solid #d3d1c7; border-radius: 12px;
+            padding: 18px 16px; margin-bottom: 20px; overflow-x: auto; }
+  .fstep { flex: 1; min-width: 118px; text-align: center; padding: 0 6px; }
+  .fnum { font-size: 22px; font-weight: 600; color: #185fa5; }
+  .flabel { font-size: 11.5px; color: #5f5e5a; margin-top: 4px; }
+  .farrow { align-self: center; color: #b4b2a9; font-size: 17px; flex: 0 0 auto; }
+  .fstep.final .fnum { color: #3b6d11; }
+
+  .stage { background: #fff; border: 0.5px solid #d3d1c7; border-radius: 12px; }
+  .stage-head { display: flex; align-items: center; gap: 14px;
+                padding: 15px 24px; border-bottom: 0.5px solid #eceae4; }
+  .stage-no { width: 32px; height: 32px; border-radius: 50%; background: #e6f1fb;
+              color: #185fa5; display: flex; align-items: center; justify-content: center;
+              font-weight: 600; font-size: 14px; flex: 0 0 auto; }
+  .stage-title { font-size: 15px; font-weight: 600; }
+  .stage-big { margin-left: auto; text-align: right; }
+  .stage-big .n { font-size: 21px; font-weight: 600; color: #185fa5; }
+  .stage-big .t { font-size: 11px; color: #5f5e5a; }
+  .stage-body { padding: 13px 24px 17px; display: grid;
+                grid-template-columns: 1fr 1fr; gap: 11px 24px; }
+  .kv { font-size: 12.5px; }
+  .kv .k { color: #888780; margin-bottom: 2px; font-size: 11.5px; }
+  .kv .v { color: #2c2c2a; }
+  .kv .v code { background: #f1efe8; border-radius: 4px; padding: 1px 6px;
+                font-family: "SF Mono", Menlo, monospace; font-size: 11.5px; }
+  .rule-box { grid-column: 1 / -1; background: #faf9f6;
+              border: 0.5px solid #e5e3db; border-radius: 8px;
+              padding: 10px 14px; font-size: 12.5px; color: #444441; }
+  .rule-box b { color: #2c2c2a; }
+  .tag { display: inline-block; font-size: 11px; border-radius: 5px; padding: 1px 8px;
+         margin-right: 6px; font-weight: 500; }
+  .tag.erp { background: #e6f1fb; color: #185fa5; }
+  .tag.db { background: #eeedfe; color: #534ab7; }
+  .tag.algo { background: #e1f5ee; color: #0f6e56; }
+  .tag.user { background: #faeeda; color: #854f0b; }
+  .connector { width: 2px; height: 24px; background: #b4b2a9; margin: 0 auto; }
+
+  .final-card { background: #fff; border: 1px solid #97c459; border-radius: 12px; overflow: hidden; }
+  .final-head { background: #eaf3de; padding: 17px 24px; display: flex; align-items: center; gap: 14px; }
+  .final-head .n { font-size: 20px; font-weight: 600; color: #27500a; }
+  .final-head .file { font-family: "SF Mono", Menlo, monospace; font-size: 12.5px; color: #3b6d11; }
+  .final-body { padding: 16px 24px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .stat-chip { background: #faf9f6; border: 0.5px solid #e5e3db; border-radius: 8px; padding: 10px 14px; }
+  .stat-chip .n { font-size: 19px; font-weight: 600; color: #2c2c2a; }
+  .stat-chip .t { font-size: 11.5px; color: #888780; margin-top: 2px; }
+  .stat-chip.hi .n { color: #3b6d11; } .stat-chip.warn .n { color: #854f0b; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; background: #fff; }
+  th, td { text-align: left; padding: 9px 14px; border-bottom: 0.5px solid #eceae4; vertical-align: top; }
+  th { background: #f1efe8; color: #444441; font-weight: 600; font-size: 12px; }
+  .table-wrap { border: 0.5px solid #d3d1c7; border-radius: 12px; overflow: hidden; }
+
+  .file-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .file-item { background: #fff; border: 0.5px solid #d3d1c7; border-radius: 8px; padding: 10px 14px; font-size: 12px; }
+  .file-item .fn { font-family: "SF Mono", Menlo, monospace; font-size: 11.5px; color: #185fa5; word-break: break-all; }
+  .file-item .fd { color: #888780; margin-top: 3px; }
+
+  .notice { background: #faeeda; border: 0.5px solid #ef9f27; border-radius: 12px;
+            padding: 16px 24px; margin-top: 24px; }
+  .notice h3 { font-size: 14px; color: #633806; margin-bottom: 8px; }
+  .notice p { font-size: 12.5px; color: #633806; margin-bottom: 6px; }
+  .notice p:last-child { margin-bottom: 0; } .notice b { font-weight: 600; }
+
+  @media (max-width: 760px) {
+    .stage-body, .final-body, .role-body, .file-list { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ============ 头部 ============ -->
+  <div class="hero">
+    <h1>两大货盘 · 全流程链路（定稿）</h1>
+    <div class="sub">2026-11-23 · 框架经用户三次确认定稿 · 核心：外部渠道对货盘一是"定价的镜子"，对货盘二是"货源"</div>
+    <div class="oneline">
+      一句话记住：<b>本来分销底盘</b>（ERP 商品池）靠 <b>天镜智价 + 猫超券后价</b> 这些市场价参照完成定价，产出<b>本来货盘</b>（货盘一）；<b>本来货盘 + 猫超 + 京东VOP</b> 三个货源并成 <b>本来技术公司货盘</b>（货盘二）。
+    </div>
+    <div class="meta-row">
+      <span class="meta-chip">货盘一 <b>74,980 品</b>（2026-11-23 选品v2）</span>
+      <span class="meta-chip">货盘二 <b>322,503 行</b>（2026-11-23 v2）</span>
+      <span class="meta-chip">成本口径 <b>ERP / 猫超供货价 / 京东协议价</b></span>
+      <span class="meta-chip">空间底线 <b>≥10%</b></span>
+      <span class="meta-chip">全程只读 · 凭证零入库 · GitHub 私有</span>
+    </div>
+  </div>
+
+  <!-- ============ 两个等式 ============ -->
+  <div class="formula">
+    <div class="formula-card f1">
+      <div class="eq">货盘一 = 本来货盘 = 本来分销底盘 <span class="op">×</span> 定价<span class="op">（</span>ERP成本×分档 <span class="op">+</span> 市场价参照<span class="op">）</span></div>
+      <div class="note">底盘：四站全上架+有库存+选品规则（冷链/常温低价剔除）；参照：天镜为主、猫超券后折算、京东VOP 相似采信</div>
+    </div>
+    <div class="formula-card f2">
+      <div class="eq">货盘二 = 技术公司货盘 = 本来货盘 <span class="op">＋</span> 猫超货源 <span class="op">＋</span> 京东VOP货源</div>
+      <div class="note">本来=内部产出原样搬入（内部加价档）；猫超/京东=纯外部引入（对方发货→直发档 2/5/8）</div>
+    </div>
+  </div>
+
+  <!-- ============ 双重角色 ============ -->
+  <div class="role-band">
+    <div class="role-head">同一个渠道，两个角色 —— 这就是"内部产出 vs 外部引入"的分界</div>
+    <div class="role-body">
+      <div class="role-cell">
+        <h4>猫超</h4>
+        <p><span class="as-mirror">在货盘一里：定价的镜子</span></p>
+        <p>券后价折算（960 个品）帮本来定价看市场成交水位</p>
+        <p><span class="as-source">在货盘二里：货源</span></p>
+        <p>SKU 供货价 = 进货成本（中位约为 C 端 6 折），238,245 行进聚合表</p>
+      </div>
+      <div class="role-cell">
+        <h4>京东 VOP</h4>
+        <p><span class="as-mirror">在货盘一里：定价的镜子</span></p>
+        <p>相似度 ≥75 采信的 1.06 万个品，用 jd_price 当市场价</p>
+        <p><span class="as-source">在货盘二里：货源</span></p>
+        <p>协议价 sale_price = 进货成本，18,402 行进聚合表</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 上篇：货盘一 ============ -->
+  <h2 class="section-title">上篇 · 货盘一：本来货盘（11-23 选品 v2）</h2>
+  <div class="section-sub">底盘筛选 → 定价 → 成品；周频滚动</div>
+
+  <div class="funnel">
+    <div class="fstep"><div class="fnum">402,567</div><div class="flabel">四站上架关系</div></div>
+    <div class="farrow">→</div>
+    <div class="fstep"><div class="fnum">80,364</div><div class="flabel">四站全上架</div></div>
+    <div class="farrow">→</div>
+    <div class="fstep"><div class="fnum">75,067</div><div class="flabel">四站都有库存</div></div>
+    <div class="farrow">→</div>
+    <div class="fstep"><div class="fnum">74,980</div><div class="flabel">选品v2·剔87个</div></div>
+    <div class="farrow">→</div>
+    <div class="fstep"><div class="fnum">21,398</div><div class="flabel">真实市场对标</div></div>
+    <div class="farrow">→</div>
+    <div class="fstep final"><div class="fnum">74,980</div><div class="flabel">定价成品行数</div></div>
+  </div>
+
+  <div class="stage">
+    <div class="stage-head">
+      <div class="stage-no">筛</div>
+      <div class="stage-title">底盘选品（2026-11-23 新增冷链/常温低价剔除）</div>
+      <div class="stage-big"><div class="n">74,980</div><div class="t">剔除 87 个</div></div>
+    </div>
+    <div class="stage-body">
+      <div class="kv"><div class="k">基础条件</div><div class="v">分销池 × 北京/广州/上海/武汉四站全上架 × 四站都有库存（SaleQty&gt;0）</div></div>
+      <div class="kv"><div class="k">新增剔除 <span class="tag user">11-23 拍板</span></div><div class="v">仓发+冷链+成本×1.12&lt;30元 → 剔（76个）；仓发+常温+成本×1.12&lt;10元 → 剔（11个）；直发不受影响</div></div>
+      <div class="kv"><div class="k">冷链判定</div><div class="v"><code>product.DeliveryTemperature</code>：100=常温，101/102=冷链（archery 批量拉取）</div></div>
+      <div class="kv"><div class="k">发货类型</div><div class="v"><code>OriginDirectDelivery=True</code> → 直发（标定 99%/100% 吻合）</div></div>
+      <div class="rule-box"><b>成本口径（沿用拍板）：</b>展示状态优先→未展示回退，作废排除；直发取采购价、仓发取含税单位成本（无则采购价），单站最高。成本缺失仅 3 个。</div>
+    </div>
+  </div>
+
+  <div class="connector"></div>
+
+  <div class="stage">
+    <div class="stage-head">
+      <div class="stage-no">价</div>
+      <div class="stage-title">定价 = ERP成本 × 分档 ＋ 三个市场价参照</div>
+      <div class="stage-big"><div class="n">74,980 行</div><div class="t">公式 224,931 格零错</div></div>
+    </div>
+    <div class="stage-body">
+      <div class="kv"><div class="k">加价档（内部逻辑）</div><div class="v">直发 2/5/8%、仓发 5/12/24% 分开发；建议档=默认中档、空间&lt;10%降①、中档空间≥30%升③</div></div>
+      <div class="kv"><div class="k">市场价参照 · ① 天镜智价（主）</div><div class="v">人工核实同款 6,550 / 不同规折算 478 / 相似仅参考 879；历史价库 45,367 SKU</div></div>
+      <div class="kv"><div class="k">市场价参照 · ② 猫超券后折算</div><div class="v">与本网对齐的品按规格折算（单件价=猫超券后价÷猫超件数×本网件数），960 个品生效</div></div>
+      <div class="kv"><div class="k">市场价参照 · ③ 京东VOP 相似采信</div><div class="v">算法相似度 ≥75 采信 1.06 万个品，用 jd_price；相似未命中的走 ERP 基准价兜底并标注</div></div>
+      <div class="rule-box"><b>成品：</b><code>分销标准池定价_2026-11-23.xlsx</code> —— 74,980 行 × 31 列。真实对标 21,398 个（空间率中位 15.5%），ERP 兜底 53,026 个（保守中档不升档）。</div>
+    </div>
+  </div>
+
+  <!-- ============ 下篇：货盘二 ============ -->
+  <h2 class="section-title">下篇 · 货盘二：技术公司货盘（11-23 v2）</h2>
+  <div class="section-sub">货盘一原样 ＋ 两个外部货源；同品组关联；空间率 ≥10%</div>
+
+  <div class="final-card">
+    <div class="final-head">
+      <div class="n">322,503 行 · 三货源并集</div>
+      <div class="file">全货盘聚合表_2026-11-23.csv</div>
+    </div>
+    <div class="final-body">
+      <div class="stat-chip hi"><div class="n">65,856</div><div class="t">本来货盘行（沿用内部档：直发65,416 + 仓发440，仓发档②=成本×1.12 全对）</div></div>
+      <div class="stat-chip"><div class="n">18,402</div><div class="t">京东VOP 行（协议价成本，直发档）</div></div>
+      <div class="stat-chip"><div class="n">238,245</div><div class="t">猫超行（供货价成本，直发档）</div></div>
+      <div class="stat-chip hi"><div class="n">7,650</div><div class="t">跨货源同品组（同实物多进货价，择优一眼可见）</div></div>
+      <div class="stat-chip"><div class="n">group_id</div><div class="t">对齐：京东↔本网50%(16,429)、本网↔猫超2.2%(1,637)、京东↔猫超0.4%(117)，传递成团</div></div>
+      <div class="stat-chip warn"><div class="n">91万→32万</div><div class="t">空间率≥10% 过滤；猫超淘汰最多（券后价≈供货价，加价即超）</div></div>
+    </div>
+  </div>
+
+  <div class="stage" style="margin-top:14px">
+    <div class="stage-head">
+      <div class="stage-no">合</div>
+      <div class="stage-title">每行结构 + 关键坑</div>
+      <div class="stage-big"><div class="n">19 列</div><div class="t">每货源一行</div></div>
+    </div>
+    <div class="stage-body">
+      <div class="kv"><div class="k">行结构</div><div class="v">group_id | 货源 | 商品名/品牌/类目/规格/条码 | 发货类型 | 加价档类型 | 成本 | 档①②③ | 建议档+建议输出价 | 市面价格+来源 | 空间率</div></div>
+      <div class="kv"><div class="k">外部货源行</div><div class="v">京东成本=sale_price、市面=jd_price；猫超成本=SKU供货价、市面=券后价（回退一口价）；均直发 2/5/8</div></div>
+      <div class="rule-box"><b>坑① ID 撞号：</b>本网 psys 与 pbasic 两套编号会撞（书的 psys=316578 恰是滴露的 pbasic）——跨表关联必须统一 pbasic，否则并查集乱配。<b>坑② 条码失效：</b>猫超"条码"多为 24 开头内部码，对齐只 2%，同品识别只能靠相似度。<b>坑③ 分页深度：</b>阿里 list 接口第 51 页起报错，全量必须 scroll 模式。</div>
+      <div class="rule-box"><b>倒挂提醒：</b>猫超存在券后价&lt;供货价的倒挂品——宽表"券后毛利比"列可查，空间率过滤天然排除。</div>
+    </div>
+  </div>
+
+  <!-- ============ 交付物清单 ============ -->
+  <h2 class="section-title">交付物清单（2026-11-23）</h2>
+  <div class="file-list">
+    <div class="file-item"><div class="fn">pricing_output/分销标准池定价_2026-11-23.xlsx</div><div class="fd">货盘一成品 · 74,980 行（选品v2）</div></div>
+    <div class="file-item"><div class="fn">allpool_output/全货盘聚合表_2026-11-23.csv</div><div class="fd">货盘二成品 · 322,503 行</div></div>
+    <div class="file-item"><div class="fn">allpool_output/标准池_选品v2_2026-11-23.jsonl + 剔除清单</div><div class="fd">新底盘 74,980 + 87 个剔除原因</div></div>
+    <div class="file-item"><div class="fn">jdvop_pull/output/猫超商品宽表SKU级_2026-11-21.csv</div><div class="fd">猫超底表 · 813,572 行 · 四价+折扣率+券后毛利比</div></div>
+    <div class="file-item"><div class="fn">allpool_output/全链路说明_两大货盘_2026-11-23.html</div><div class="fd">本文件</div></div>
+    <div class="file-item"><div class="fn">github.com/alfred070985/benlink-product（私有）</div><div class="fd">全量事实源 · 95012业务+两货盘 · LFS</div></div>
+  </div>
+
+  <div class="notice">
+    <h3>下一步可选方向</h3>
+    <p><b>1.</b> 货盘一/二周频滚动：标准池链路已支持自动报告；猫超底表与聚合表可加 automation。</p>
+    <p><b>2.</b> 0.6-0.75 候选回收：猫超↔本网 1,674 + 京东↔猫超 1,000，降阈值需人工抽检。</p>
+    <p><b>3.</b> 任务 1 精化：SPU 代表价细化到 SKU 级规格匹配折算。</p>
+  </div>
+
+</div>
+</body>
+</html>
