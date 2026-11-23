@@ -2,7 +2,7 @@
 """标准池商品 × 京东VOP 相似品自动匹配：score_pair ≥0.75 直接采信为同品。
 
 复用 build_similarity.py 的评分函数。品牌预过滤 + 一级类目(c1)分组内比对，控制计算量。
-输入：源数据_标准池商品信息_<日期>.jsonl + jdvop_pull/output/本来生活VOP_goods_本网ID.csv
+输入：源数据_标准池商品信息_<日期>.jsonl + supply_pull/output/本来生活VOP_goods_本网ID.csv
 输出：标准池京东相似匹配_<日期>.jsonl（每行：productSysNo, jd_sku, score, jd_price, 匹配名）
 """
 import csv
@@ -21,7 +21,7 @@ HERE = Path(__file__).resolve().parent
 PRICING_DIR = Path(__import__("os").environ.get("PRICING_DIR", HERE))
 TODAY = datetime.now().strftime("%Y-%m-%d")
 POOL_INFO = PRICING_DIR / f"源数据_标准池商品信息_{TODAY}.jsonl"
-VOP_CSV = HERE.parent / "jdvop_pull" / "output" / "本来生活VOP_goods_本网ID.csv"
+VOP_CSV = HERE.parent / "supply_pull" / "output" / "本来生活VOP_goods_本网ID.csv"
 OUT = PRICING_DIR / f"标准池京东相似匹配_{TODAY}.jsonl"
 THRESHOLD = 0.75
 RECORD_FLOOR = 0.60   # 0.6 以上全部记录，供阈值决策

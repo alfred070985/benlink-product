@@ -1,5 +1,5 @@
 # ===== 凭证与安全（绝不入库） =====
-jdvop_pull/standalone/credentials.json
+supply_pull/standalone/credentials.json
 **/credentials.json
 *.key
 .secrets/
@@ -27,9 +27,8 @@ config.local.yaml
 archery_sqlquery.html
 
 # ===== 已被新版取代的历史快照（内容已合并进 11-20/11-21 版）=====
-jdvop_pull/output/猫超详情_全量_2026-11-19.jsonl
-jdvop_pull/output/猫超SKU_全量_2026-11-19.jsonl
-jdvop_pull/output/猫超商品宽表SKU级_2026-11-20.csv
-jdvop_pull/output/猫超产品_list_10000个_*
-pricing_output/源数据_天镜价格历史全量_2026-11-16.jsonl
-pricing_output/源数据_天镜同品映射_2026-11-16.jsonl
+supply_pull/output/猫超详情_全量_2026-11-19.jsonl
+supply_pull/output/猫超SKU_全量_2026-11-19.jsonl
+supply_pull/output/猫超商品宽表SKU级_2026-11-20.csv
+supply_pull/output/猫超产品_list_10000个_*
+weekly_work/

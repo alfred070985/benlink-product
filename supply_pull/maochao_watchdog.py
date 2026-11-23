@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """猫超回查任务监控看门狗：每 10 分钟检查产出增长与进程状态，异常自动重启。
 
-检查对象（jdvop_pull/output/）：
+检查对象（supply_pull/output/）：
   猫超详情_全量_2026-11-20.jsonl + 失败文件  ← maochao_full_detail.py
   猫超价格_全量_2026-11-20.jsonl              ← maochao_price.py
 判定：

@@ -44,13 +44,25 @@ def yuan(v):
 
 
 def load_details():
-    path = latest("猫超详情_全量_*.jsonl")
+    """周频增量：以最新 list 为有效品范围（自动剔除已下架），详情取所有历史文件并集（新品覆盖旧数据）。
+    找不到当周 list 时退化为不过滤（详情并集全量）。"""
+    list_path = latest("猫超产品_list全量*.jsonl")
+    valid = None
+    if list_path:
+        valid = set()
+        for l in list_path.open(encoding="utf-8"):
+            if l.strip():
+                valid.add(json.loads(l)["product_id"])
     out = {}
-    for l in path.open(encoding="utf-8"):
-        if l.strip():
-            o = json.loads(l)
-            out[o["product_id"]] = o["data"]
-    return path.name, out
+    srcs = sorted(glob.glob(str(OUT_DIR / "猫超详情_全量_*.jsonl")))
+    for fp in srcs:
+        for l in open(fp, encoding="utf-8"):
+            if l.strip():
+                o = json.loads(l)
+                if valid is None or o["product_id"] in valid:
+                    out[o["product_id"]] = o["data"]
+    scope = f"+{list_path.name}" if list_path else "(无list,不过滤)"
+    return f"{len(srcs)}个详情文件{scope}", out
 
 
 def load_prices():

@@ -31,7 +31,7 @@ REPO = Path(os.environ.get("BENLINK_REPO", HERE.parent.parent / "ai-workspace" /
 BASE_XLSX = REPO / "01_源数据" / "禄品4940_筛选表_2026-11-09.xlsx"
 JD_MAP_XLSX = REPO / "01_源数据" / "商品池10.29.xlsx"
 CHECK_XLSX = REPO / "02_报价表" / "禄品供应商模式_95012_成本及二次定价_2026-11-12.xlsx"
-VOP_CSV = HERE.parent / "jdvop_pull" / "output" / "本来生活VOP_goods_本网ID.csv"
+VOP_CSV = HERE.parent / "supply_pull" / "output" / "本来生活VOP_goods_本网ID.csv"
 HIST_XLSX = PRICING_DIR / "源数据_京东比价总表1.29.xlsx"
 ERP_JSONL = PRICING_DIR / "源数据_ERP站点成本_2026-11-13.jsonl"
 PULL_META = PRICING_DIR / "取数说明.json"
@@ -491,7 +491,7 @@ def main():
         (5, "商品池10.29.xlsx", "Excel 映射表", str(JD_MAP_XLSX), "P 码 → 京东商品编码", f"{jd_map_rows:,} 行", "商品编号、京东商品编码", "2026-10-29", "本地只读", "是", "仅用编码做关联，不用其价格"),
         (6, "禄品供应商模式_95012_成本及二次定价_2026-11-12.xlsx", "历史报价表", str(CHECK_XLSX), "口径交叉验证", "4,940 行", "商品编号、被剔除(原)", "2026-11-12", "本地只读", "否", "仅校验展示状态口径，不参与定价"),
         (7, "源数据_京东比价总表1.29.xlsx", "历史比价源", str(HIST_XLSX), "辅助比价（实时价缺失时回退）", f"{hist_rows:,} 行", "商品编码、京东当前售价、京东折合价、是否同品同规格、更新时间", "表内更新时间 2024–2026", "只读（已从 Downloads 原样复制）", "是（辅助）", "P码直连禄品；覆盖广但为历史价，明细逐行标来源与更新时间，请核同品同规格"),
-        (8, "本网ID_待确认.csv", "歧义映射清单", str(HERE.parent / "jdvop_pull" / "output" / "本网ID_待确认.csv"), "调研", "1,751 行", "sku_id、pool_candidate_pcodes、goods_map_pcode", "2026-11-13", "只读调研", "否", "多 P 码歧义，不做自动裁决"),
+        (8, "本网ID_待确认.csv", "歧义映射清单", str(HERE.parent / "supply_pull" / "output" / "本网ID_待确认.csv"), "调研", "1,751 行", "sku_id、pool_candidate_pcodes、goods_map_pcode", "2026-11-13", "只读调研", "否", "多 P 码歧义，不做自动裁决"),
         (9, "取数说明.json", "取数元数据", str(PULL_META), "留痕", "1 份", "read_only、side_effects、status_enum、批次", meta.get("pulled_at"), "本地只读", "是", "记录只读口径"),
     ]
     for s in sources:

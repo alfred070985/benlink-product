@@ -15,6 +15,7 @@
   剔除清单_选品v2_2026-11-23.jsonl   被剔除的品+原因
 """
 import json
+import os
 import subprocess
 import sys
 import time
@@ -27,12 +28,14 @@ from build_standard_pool_pricing import resolve_cost, load_costs
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
-SRC = ROOT / "pricing_output" / "标准池_四站全上架有库存_2026-11-19.jsonl"
-COST = ROOT / "pricing_output" / "源数据_标准池ERP站点成本_2026-11-19.jsonl"
-OUT_POOL = HERE / "标准池_选品v2_2026-11-23.jsonl"
-OUT_CUT = HERE / "剔除清单_选品v2_2026-11-23.jsonl"
-ARCHERY = "/Users/alfredmini/Benlink/ops-local/skills/benlai-trace-debug/scripts/archery/archery_client.py"
-PY = "/Users/alfredmini/ai-workspace/local/venv/bin/python"
+from latest import latest
+SRC = latest("pricing_output/标准池_四站全上架有库存_*.jsonl", "ALLPOOL_POOL")
+COST = latest("pricing_output/源数据_标准池ERP站点成本_*.jsonl", "ALLPOOL_COST")
+OUT_POOL = HERE / f"标准池_选品v2_{datetime.now():%Y-%m-%d}.jsonl"
+OUT_CUT = HERE / f"剔除清单_选品v2_{datetime.now():%Y-%m-%d}.jsonl"
+ARCHERY = os.environ.get("BENLAI_ARCHERY_CLIENT",
+    str(Path.home() / "Benlink/ops-local/skills/benlai-trace-debug/scripts/archery/archery_client.py"))
+PY = os.environ.get("WEEKLY_PY", str(Path.home() / "ai-workspace/local/venv/bin/python"))
 BATCH = 800
 
 WAREHOUSE_MID = 1.12   # 仓发中档加价（拍板）

@@ -18,32 +18,35 @@ def str_list(v):
 
 
 def main():
+    import glob
+    from latest import latest
     n = 0
     seen = set()
     with OUT.open("w", encoding="utf-8") as f:
-        detail = HERE.parent / "jdvop_pull" / "output" / "猫超详情_全量_2026-11-20.jsonl"
-        for l in detail.open(encoding="utf-8"):
-            if not l.strip():
-                continue
-            o = json.loads(l)
-            pid = o["product_id"]
-            for bc in str_list(o["data"].get("barcode_list")):
-                bc = str(bc).strip()
-                if bc and (bc, pid, None) not in seen:
-                    seen.add((bc, pid, None))
-                    f.write(json.dumps({"barcode": bc, "product_id": pid, "sku_id": None}, ensure_ascii=False) + "\n")
-                    n += 1
-        sku_file = HERE.parent / "jdvop_pull" / "output" / "猫超SKU_全量_2026-11-20.jsonl"
-        for l in sku_file.open(encoding="utf-8"):
-            if not l.strip():
-                continue
-            o = json.loads(l)
-            bc = str(o.get("barcode") or "").strip()
-            sid = str(o.get("sku_id") or "").strip()
-            if bc and sid and (bc, o["product_id"], sid) not in seen:
-                seen.add((bc, o["product_id"], sid))
-                f.write(json.dumps({"barcode": bc, "product_id": o["product_id"], "sku_id": sid}, ensure_ascii=False) + "\n")
-                n += 1
+        # 周频：并集所有历史详情/SKU 文件（新品覆盖旧品），条码索引始终是全量的
+        for pat, env in (("supply_pull/output/猫超详情_全量_*.jsonl", "ALLPOOL_MC_DETAIL"),
+                         ("supply_pull/output/猫超SKU_全量_*.jsonl", "ALLPOOL_MC_SKU")):
+            anchor = latest(pat, env)
+            for fp in sorted(glob.glob(str(anchor.parent / pat.split("/")[-1]))):
+                for l in open(fp, encoding="utf-8"):
+                    if not l.strip():
+                        continue
+                    o = json.loads(l)
+                    if "data" in o:
+                        pid = o["product_id"]
+                        for bc in str_list(o["data"].get("barcode_list")):
+                            bc = str(bc).strip()
+                            if bc and (bc, pid, None) not in seen:
+                                seen.add((bc, pid, None))
+                                f.write(json.dumps({"barcode": bc, "product_id": pid, "sku_id": None}, ensure_ascii=False) + "\n")
+                                n += 1
+                    else:
+                        bc = str(o.get("barcode") or "").strip()
+                        sid = str(o.get("sku_id") or "").strip()
+                        if bc and sid and (bc, o["product_id"], sid) not in seen:
+                            seen.add((bc, o["product_id"], sid))
+                            f.write(json.dumps({"barcode": bc, "product_id": o["product_id"], "sku_id": sid}, ensure_ascii=False) + "\n")
+                            n += 1
     print(f"条码索引 {n} 条 → {OUT.name}")
 
 

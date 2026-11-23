@@ -76,14 +76,14 @@ def main():
     sku_path = OUT_DIR / f"猫超SKU_全量_{today}.jsonl"
     fail_path = OUT_DIR / f"猫超详情_失败_{today}.jsonl"
 
-    # 断点：已成功的 id
+    # 断点：已成功的 id = 跨所有历史详情文件的并集（周频增量：老品跳过，只补新品）
     done = set()
-    if detail_path.exists():
-        for l in detail_path.open(encoding="utf-8"):
+    for fp in sorted(glob.glob(str(OUT_DIR / "猫超详情_全量_*.jsonl"))):
+        for l in open(fp, encoding="utf-8"):
             if l.strip():
                 done.add(json.loads(l)["product_id"])
     todo = [i for i in ids if i not in done]
-    print(f"已完成 {len(done)}，待回查 {len(todo)}", flush=True)
+    print(f"已完成(跨历史文件) {len(done)}，待回查 {len(todo)}", flush=True)
 
     creds = load_creds()
     t0 = time.time()

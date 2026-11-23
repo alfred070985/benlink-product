@@ -17,10 +17,11 @@ from build_similarity import score_pair, brand_tokens, brand_main, model_code, p
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
-VOP = ROOT / "jdvop_pull" / "output" / "本来生活VOP_goods_本网ID.csv"
-INFO = ROOT / "pricing_output" / "源数据_标准池商品信息_2026-11-19.jsonl"
-POOL = ROOT / "pricing_output" / "标准池_四站全上架有库存_2026-11-19.jsonl"
-MC_DETAIL = ROOT / "jdvop_pull" / "output" / "猫超详情_全量_2026-11-20.jsonl"
+from latest import latest
+VOP = latest("supply_pull/output/本来生活VOP_goods_本网ID.csv", "ALLPOOL_VOP")
+INFO = latest("pricing_output/源数据_标准池商品信息_*.jsonl", "ALLPOOL_INFO")
+POOL = latest("pricing_output/标准池_四站全上架有库存_*.jsonl", "ALLPOOL_POOL")
+MC_DETAIL = latest("supply_pull/output/猫超详情_全量_*.jsonl", "ALLPOOL_MC_DETAIL")
 OUT = HERE / "对齐_京东.jsonl"
 THRESHOLD = 0.75
 
@@ -38,9 +39,8 @@ def load_targets(which):
             name = inf.get("name") or ""
             targets.append({"tid": f"bl:{o['productBasicSysNo']}", "src": "bl", "name": name, "brand": ""})
     else:
-        for l in MC_DETAIL.open(encoding="utf-8"):
-            if not l.strip():
-                continue
+        from latest import merged_lines
+        for l in merged_lines("supply_pull/output/猫超详情_全量_*.jsonl", "ALLPOOL_MC_DETAIL"):
             d = json.loads(l)["data"]
             targets.append({"tid": f"mc:{d.get('product_id')}", "src": "maochao",
                             "name": d.get("product_title") or "", "brand": d.get("brand") or ""})

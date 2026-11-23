@@ -16,10 +16,11 @@ from build_similarity import parse_pack
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
+from latest import latest
 ALIGN = HERE / "对齐_本网猫超.jsonl"
-PRICE = ROOT / "jdvop_pull" / "output" / "猫超价格_全量_2026-11-20.jsonl"
-DETAIL = ROOT / "jdvop_pull" / "output" / "猫超详情_全量_2026-11-20.jsonl"
-INFO = ROOT / "pricing_output" / "源数据_标准池商品信息_2026-11-19.jsonl"
+PRICE = latest("supply_pull/output/猫超价格_全量_*.jsonl", "ALLPOOL_MC_PRICE")
+DETAIL = latest("supply_pull/output/猫超详情_全量_*.jsonl", "ALLPOOL_MC_DETAIL")
+INFO = latest("pricing_output/源数据_标准池商品信息_*.jsonl", "ALLPOOL_INFO")
 OUT = HERE / "任务1_猫超市场价.jsonl"
 
 
@@ -37,14 +38,15 @@ def main():
             o = json.loads(l)
             price[o["product_id"]] = o
     detail = {}
-    for l in DETAIL.open(encoding="utf-8"):
-        if l.strip():
-            o = json.loads(l)
-            detail[o["product_id"]] = o["data"]
+    from latest import latest, merged_lines
+    detail = {}
+    for l in merged_lines("supply_pull/output/猫超详情_全量_*.jsonl", "ALLPOOL_MC_DETAIL"):
+        o = json.loads(l)
+        detail[o["product_id"]] = o["data"]
     info = {json.loads(l)["productSysNo"]: json.loads(l) for l in INFO.open(encoding="utf-8") if l.strip()}
     # pbasic → 商品名（标准池 jsonl 带 productSysNo）
     pbasic2name = {}
-    pool = ROOT / "pricing_output" / "标准池_四站全上架有库存_2026-11-19.jsonl"
+    pool = latest("pricing_output/标准池_四站全上架有库存_*.jsonl", "ALLPOOL_POOL")
     for l in pool.open(encoding="utf-8"):
         if l.strip():
             o = json.loads(l)

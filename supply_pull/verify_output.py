@@ -6,7 +6,7 @@ from collections import Counter, defaultdict
 from datetime import datetime
 from pathlib import Path
 
-OUT = Path("/Users/alfredmini/benlink_product/jdvop_pull/output")
+OUT = Path(__file__).resolve().parent / "output"
 CSV_PATH = OUT / "本来生活VOP_goods.csv"
 RAW_PATH = OUT / "本来生活VOP_raw.jsonl"
 FAIL_PATH = OUT / "本来生活VOP_failures.jsonl"

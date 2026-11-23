@@ -11,10 +11,13 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
+import os
+from latest import latest
 OUT = HERE / "本网条码.jsonl"
-SRC = ROOT / "pricing_output" / "标准池_四站全上架有库存_2026-11-19.jsonl"
-ARCHERY = "/Users/alfredmini/Benlink/ops-local/skills/benlai-trace-debug/scripts/archery/archery_client.py"
-PY = "/Users/alfredmini/ai-workspace/local/venv/bin/python"
+SRC = latest("pricing_output/标准池_四站全上架有库存_*.jsonl", "ALLPOOL_POOL")
+ARCHERY = os.environ.get("BENLAI_ARCHERY_CLIENT",
+    str(Path.home() / "Benlink/ops-local/skills/benlai-trace-debug/scripts/archery/archery_client.py"))
+PY = os.environ.get("WEEKLY_PY", str(Path.home() / "ai-workspace/local/venv/bin/python"))
 BATCH = 800
 
 

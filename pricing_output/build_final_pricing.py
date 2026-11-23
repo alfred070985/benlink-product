@@ -28,7 +28,7 @@ DETAIL_XLSX = PRICING_DIR / "规则定价_成本与京东比价_2026-11-13.xlsx"
 SIM_XLSX = PRICING_DIR / "同品关系_候选相似度与人工确认_2026-11-16.xlsx"
 ERP_JSONL = PRICING_DIR / "源数据_ERP站点成本_2026-11-13.jsonl"
 HIST_XLSX = PRICING_DIR / "源数据_京东比价总表1.29.xlsx"
-VOP_CSV = HERE.parent / "jdvop_pull" / "output" / "本来生活VOP_goods_本网ID.csv"
+VOP_CSV = HERE.parent / "supply_pull" / "output" / "本来生活VOP_goods_本网ID.csv"
 PULL_META = PRICING_DIR / "取数说明.json"
 BASE_XLSX = Path(__import__("os").environ.get(
     "BENLINK_REPO", HERE.parent.parent / "ai-workspace" / "projects" / "benlink-product"

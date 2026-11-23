@@ -15,9 +15,10 @@ from build_similarity import score_pair, brand_tokens, brand_main, model_code, p
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
-POOL = ROOT / "pricing_output" / "标准池_四站全上架有库存_2026-11-19.jsonl"
-INFO = ROOT / "pricing_output" / "源数据_标准池商品信息_2026-11-19.jsonl"
-MC_DETAIL = ROOT / "jdvop_pull" / "output" / "猫超详情_全量_2026-11-20.jsonl"
+from latest import latest
+POOL = latest("pricing_output/标准池_四站全上架有库存_*.jsonl", "ALLPOOL_POOL")
+INFO = latest("pricing_output/源数据_标准池商品信息_*.jsonl", "ALLPOOL_INFO")
+MC_DETAIL = latest("supply_pull/output/猫超详情_全量_*.jsonl", "ALLPOOL_MC_DETAIL")
 BARCODE_MATCH = HERE / "条码对齐_本网猫超.jsonl"
 OUT = HERE / "对齐_本网猫超.jsonl"
 THRESHOLD = 0.75
@@ -42,10 +43,9 @@ def load_pool():
 
 
 def load_maochao():
+    from latest import merged_lines
     items = []
-    for l in MC_DETAIL.open(encoding="utf-8"):
-        if not l.strip():
-            continue
+    for l in merged_lines("supply_pull/output/猫超详情_全量_*.jsonl", "ALLPOOL_MC_DETAIL"):
         o = json.loads(l)["data"]
         items.append({"pid": o.get("product_id"), "name": o.get("product_title") or "",
                       "brand": o.get("brand") or "", "category": o.get("category") or ""})

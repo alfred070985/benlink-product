@@ -62,11 +62,15 @@ def suggest(t, market):
 
 
 def main():
+    from latest import latest
+    BL_XLSX = latest("pricing_output/分销标准池定价_*.xlsx", "ALLPOOL_BL_XLSX")
+    BL_POOL = latest("pricing_output/标准池_四站全上架有库存_*.jsonl", "ALLPOOL_POOL")
+    VOP_CSV = latest("supply_pull/output/本来生活VOP_goods_本网ID.csv", "ALLPOOL_VOP")
+    MC_WIDE = latest("supply_pull/output/猫超商品宽表SKU级_*.csv", "ALLPOOL_MC_WIDE")
     # ---- 1. 本网行（读货盘一成品，完整沿用内部逻辑：直发2/5/8、仓发5/12/24 分开发）----
     print("读本网成品…", flush=True)
     bl_rows = []
-    wb = openpyxl.load_workbook(ROOT / "pricing_output" / "分销标准池定价_2026-11-23.xlsx",
-                                read_only=True, data_only=True)
+    wb = openpyxl.load_workbook(BL_XLSX, read_only=True, data_only=True)
     ws = wb["01_定价结果"]
     it = ws.iter_rows(values_only=True)
     hdr = list(next(it))
@@ -80,7 +84,7 @@ def main():
             task1[str(o["pbasic"])] = o
     # 商品编号(productSysNo) → productBasicSysNo 映射（任务1/对齐的key是pbasic）
     psys2pbasic = {}
-    for l in (ROOT / "pricing_output" / "标准池_四站全上架有库存_2026-11-19.jsonl").open(encoding="utf-8"):
+    for l in BL_POOL.open(encoding="utf-8"):
         if l.strip():
             o = json.loads(l)
             psys2pbasic[str(o["productSysNo"])] = str(o["productBasicSysNo"])
@@ -109,7 +113,7 @@ def main():
     # ---- 2. 京东行 ----
     print("读京东VOP…", flush=True)
     jd_rows = []
-    with (ROOT / "jdvop_pull" / "output" / "本来生活VOP_goods_本网ID.csv").open(encoding="utf-8-sig", newline="") as f:
+    with VOP_CSV.open(encoding="utf-8-sig", newline="") as f:
         for r in csv.DictReader(f):
             cost = r.get("sale_price")
             market = r.get("jd_price")
@@ -133,7 +137,7 @@ def main():
     # ---- 3. 猫超行（SKU级宽表）----
     print("读猫超宽表…", flush=True)
     mc_rows = []
-    with (ROOT / "jdvop_pull" / "output" / "猫超商品宽表SKU级_2026-11-21.csv").open(encoding="utf-8-sig", newline="") as f:
+    with MC_WIDE.open(encoding="utf-8-sig", newline="") as f:
         for r in csv.DictReader(f):
             cost = r.get("channel_price_sku") or r.get("channel_price_spu")
             market = r.get("coupon_price_sku") or r.get("coupon_price_spu")

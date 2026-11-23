@@ -27,11 +27,11 @@ from pathlib import Path
 import requests
 import yaml
 
-ROOT = Path("/Users/alfredmini/benlink_product/jdvop_pull")
+ROOT = Path(__file__).resolve().parent
 CONF_DIR = Path("/tmp/benlai-online-conf")
 APOLLO_YML = CONF_DIR / "application.yml"
 ARCHERY_JSON = CONF_DIR / "archery.json"
-ARCHERY_MODULE_DIR = "/Users/alfredmini/ai-workspace/shared/benlai-trace-debug/scripts/archery"
+ARCHERY_MODULE_DIR = os.environ.get("BENLAI_ARCHERY_DIR", str(Path.home() / "ai-workspace/shared/benlai-trace-debug/scripts/archery"))
 JD_URL = "https://api.jd.com/routerjson"
 APOLLO_TOOLS = "http://apollo-tools-online.benlai.com"
 TOKEN_KEY = "erp:third_vendor:jd:access_token:{}"
