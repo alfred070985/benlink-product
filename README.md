@@ -88,7 +88,7 @@
 
 - `.ai/`：状态机（state.md）、决策记录（decisions/）、verify.py 环境验证
 - `AGENTS.md`：工作规则与权威业务口径（改口径先看这里）
-- `本来生活VOP_goods.csv`：京东VOP原始价格表（18M，定价源头之一）
+- `supply_pull/output/本来生活VOP_goods.csv`：京东VOP原始价格表（18M，VOP拉取产物，定价源头之一）
 
 ## 每周更新流程（周频节奏，已由 weekly_pipeline.py 自动化）
 
