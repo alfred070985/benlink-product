@@ -62,21 +62,23 @@ def suggest(t, market):
 
 
 def main():
-    # ---- 1. 本网行（读定价成品的 成本+对标价+名称+类目）----
+    # ---- 1. 本网行（读货盘一成品，完整沿用内部逻辑：直发2/5/8、仓发5/12/24 分开发）----
     print("读本网成品…", flush=True)
     bl_rows = []
-    wb = openpyxl.load_workbook(ROOT / "pricing_output" / "分销标准池定价_2026-11-19.xlsx",
+    wb = openpyxl.load_workbook(ROOT / "pricing_output" / "分销标准池定价_2026-11-23.xlsx",
                                 read_only=True, data_only=True)
     ws = wb["01_定价结果"]
     it = ws.iter_rows(values_only=True)
     hdr = list(next(it))
-    ix = {k: hdr.index(k) for k in ("商品编号", "商品名称", "二级类目", "采用成本(元)", "对标价(元)", "对标来源")}
+    ix = {k: hdr.index(k) for k in ("商品编号", "商品名称", "二级类目", "发货类型", "采用成本(元)",
+                                    "档①输出价", "档②输出价", "档③输出价",
+                                    "建议档", "建议输出价(元)", "对标价(元)", "对标来源")}
     task1 = {}
     for l in (HERE / "任务1_猫超市场价.jsonl").open(encoding="utf-8"):
         if l.strip():
             o = json.loads(l)
             task1[str(o["pbasic"])] = o
-    # 商品编号(productSysNo) → productBasicSysNo 映射（任务1的key是pbasic）
+    # 商品编号(productSysNo) → productBasicSysNo 映射（任务1/对齐的key是pbasic）
     psys2pbasic = {}
     for l in (ROOT / "pricing_output" / "标准池_四站全上架有库存_2026-11-19.jsonl").open(encoding="utf-8"):
         if l.strip():
@@ -86,7 +88,6 @@ def main():
         if not r or not r[0]:
             continue
         pid = str(r[ix["商品编号"]]).strip()
-        cost = r[ix["采用成本(元)"]]
         market = r[ix["对标价(元)"]]
         msrc = r[ix["对标来源"]] or ""
         pbasic = psys2pbasic.get(pid)
@@ -97,7 +98,10 @@ def main():
         bl_rows.append({
             "key": f"bl:{pbasic or pid}", "货源": "本网", "商品名": r[ix["商品名称"]],
             "品牌": "", "类目": r[ix["二级类目"]] or "", "规格": "",
-            "条码": "", "成本": cost, "市面价格": market, "价格来源": msrc,
+            "条码": "", "成本": r[ix["采用成本(元)"]], "市面价格": market, "价格来源": msrc,
+            "发货类型": r[ix["发货类型"]],
+            "档①": r[ix["档①输出价"]], "档②": r[ix["档②输出价"]], "档③": r[ix["档③输出价"]],
+            "建议档": r[ix["建议档"]], "建议输出价": r[ix["建议输出价(元)"]],
         })
     wb.close()
     print(f"本网 {len(bl_rows)} 行（任务1补充 {sum(1 for b in bl_rows if '猫超折算' in str(b['价格来源']))}）", flush=True)
@@ -172,8 +176,8 @@ def main():
 
     # ---- 5. 组装+统一直发档+过滤 ----
     fields = ["group_id", "货源", "商品名", "品牌", "类目", "规格", "条码",
-              "成本", "档①(2%)", "档②(5%)", "档③(8%)", "建议档", "建议输出价",
-              "市面价格", "价格来源", "空间率", "建议说明"]
+              "发货类型", "加价档类型", "成本", "档①", "档②", "档③",
+              "建议档", "建议输出价", "市面价格", "价格来源", "空间率", "建议说明"]
     n_total = n_keep = 0
     by_src = {}
     with OUT.open("w", encoding="utf-8-sig", newline="") as f:
@@ -181,22 +185,33 @@ def main():
         w.writeheader()
         for row in bl_rows + jd_rows + mc_rows:
             n_total += 1
-            t = tiers(row["成本"])
-            idx, note = suggest(t, row["市面价格"])
-            space = (row["市面价格"] - t[idx]) / row["市面价格"] if (row["市面价格"] and t[idx]) else None
+            if row["货源"] == "本网":
+                # 本网：完整沿用货盘一（直发2/5/8、仓发5/12/24 + 内部建议档）
+                t = (row["档①"], row["档②"], row["档③"])
+                out_price = row["建议输出价"]
+                note = "沿用货盘一建议档"
+                tier_type = "直发2/5/8" if row.get("发货类型") == "直发" else "仓发5/12/24"
+                ship = row.get("发货类型") or ""
+            else:
+                # 外部货源（京东VOP/猫超）：对方发货=直发档 2/5/8
+                t = tiers(row["成本"])
+                idx, note = suggest(t, row["市面价格"])
+                out_price = t[idx]
+                tier_type = "直发2/5/8"
+                ship = "直发"
+            space = (row["市面价格"] - out_price) / row["市面价格"] if (row["市面价格"] and out_price) else None
             if space is None or space < FLOOR:
                 continue
             n_keep += 1
             by_src[row["货源"]] = by_src.get(row["货源"], 0) + 1
-            gid = dsu.find(row["key"].split(":")[0] + ":" + row["key"].split(":")[1]) if row["key"].count(":") else dsu.find(row["key"])
-            # mc key 形如 mc:pid:skuid，对齐用的是 pid → 取前两段
             parts = row["key"].split(":")
             gid = dsu.find(":".join(parts[:2]))
             w.writerow({
                 "group_id": gid, "货源": row["货源"], "商品名": row["商品名"],
                 "品牌": row["品牌"], "类目": row["类目"], "规格": row["规格"], "条码": row["条码"],
-                "成本": row["成本"], "档①(2%)": t[0], "档②(5%)": t[1], "档③(8%)": t[2],
-                "建议档": f"档{idx+1}", "建议输出价": t[idx],
+                "发货类型": ship, "加价档类型": tier_type,
+                "成本": row["成本"], "档①": t[0], "档②": t[1], "档③": t[2],
+                "建议档": row.get("建议档") or f"档{idx+1}", "建议输出价": out_price,
                 "市面价格": row["市面价格"], "价格来源": row["价格来源"],
                 "空间率": f"{space:.2%}", "建议说明": note,
             })

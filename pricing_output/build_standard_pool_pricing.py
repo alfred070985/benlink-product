@@ -13,6 +13,7 @@
 只读源文件，输出全新工作簿。
 """
 import json
+import os
 from collections import Counter, defaultdict
 from datetime import datetime
 from decimal import Decimal, ROUND_HALF_UP
@@ -30,10 +31,10 @@ HERE = Path(__file__).resolve().parent
 PRICING_DIR = Path(__import__("os").environ.get("PRICING_DIR", HERE))
 TODAY = datetime.now().strftime("%Y-%m-%d")
 
-POOL = PRICING_DIR / f"标准池_四站全上架有库存_{TODAY}.jsonl"
-INFO = PRICING_DIR / f"源数据_标准池商品信息_{TODAY}.jsonl"
-COST = PRICING_DIR / f"源数据_标准池ERP站点成本_{TODAY}.jsonl"
-MATCH = PRICING_DIR / f"标准池京东相似匹配_{TODAY}.jsonl"
+POOL = Path(os.environ.get("PRICING_POOL", PRICING_DIR / f"标准池_四站全上架有库存_{TODAY}.jsonl"))
+INFO = Path(os.environ.get("PRICING_INFO", PRICING_DIR / f"源数据_标准池商品信息_{TODAY}.jsonl"))
+COST = Path(os.environ.get("PRICING_COST", PRICING_DIR / f"源数据_标准池ERP站点成本_{TODAY}.jsonl"))
+MATCH = Path(os.environ.get("PRICING_MATCH", PRICING_DIR / f"标准池京东相似匹配_{TODAY}.jsonl"))
 OUT = PRICING_DIR / f"分销标准池定价_{TODAY}.xlsx"
 
 # 天镜智价快照（取目录下最新一份；京东对标价统一走天镜，VOP CSV 仅作天镜无价时的备选）
