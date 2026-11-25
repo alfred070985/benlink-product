@@ -121,14 +121,14 @@
 
   <!-- ============ 头部 ============ -->
   <div class="hero">
-    <h1>两大货盘 · 全流程链路（纯池四源版）</h1>
-    <div class="sub">2026-11-25 · 从ERP源头剥离京东品 + 向量相似算法升级 · 四个货源池各自纯净</div>
+    <h1>两大货盘 · 全流程链路（纯池四源版 · 高边界折算）</h1>
+    <div class="sub">2026-11-25 · ERP剥离京东品 + 向量算法升级 + 高边界(0.80-0.85)规格折算采信 · 四个货源池各自纯净</div>
     <div class="oneline">
       一句话记住：<b>本来分销底盘</b>先按 <b>ERP t_goods_map 剔掉 16,644 个京东货</b>得纯池 58,423，再用 <b>天镜 + 向量新价（京东/猫超渠道价）</b> 完成定价产出<b>本来货盘</b>；<b>本来纯池 + 京东VOP + 猫超 + 东方甄选</b> 四个纯净货源并成 <b>技术公司全货盘</b>（货盘二）。
     </div>
     <div class="meta-row">
       <span class="meta-chip">货盘一 <b>58,423 品</b>（纯本来池）</span>
-      <span class="meta-chip">货盘二 <b>310,390 行</b>（四源）</span>
+      <span class="meta-chip">货盘二 <b>308,769 行</b>（四源）</span>
       <span class="meta-chip">成本口径 <b>ERP / 京东sale_price / 猫超供货价 / 东方purchasePrice</b></span>
       <span class="meta-chip">空间底线 <b>≥10%</b></span>
       <span class="meta-chip">全程只读 · 凭证零入库 · GitHub 私有</span>
@@ -183,7 +183,7 @@
     <div class="farrow">→</div>
     <div class="fstep"><div class="fnum">58,423</div><div class="flabel">ERP剔16,644京东品</div></div>
     <div class="farrow">→</div>
-    <div class="fstep"><div class="fnum">17,165</div><div class="flabel">真实市场对标</div></div>
+    <div class="fstep"><div class="fnum">21,037</div><div class="flabel">真实对标(含高边界)</div></div>
     <div class="farrow">→</div>
     <div class="fstep final"><div class="fnum">58,423</div><div class="flabel">定价成品行数</div></div>
   </div>
@@ -215,8 +215,8 @@
       <div class="kv"><div class="k">加价档（内部逻辑）</div><div class="v">直发 2/5/8%、仓发 5/12/24% 分开发；建议档=默认中档、空间&lt;10%降①、中档空间≥30%升③</div></div>
       <div class="kv"><div class="k">市场价参照 · ① 天镜智价（主）</div><div class="v">人工核实同款 6,550 / 不同规折算 478 / 相似仅参考 879；历史价库 45,367 SKU</div></div>
       <div class="kv"><div class="k">市场价参照 · ② 向量收敛新价（11-25 新增）</div><div class="v">向量 bge-small 匹配采信后 1对1 收敛：本网↔京东 9,290 + 本网↔猫超 5,111 个纯池品拿到真实渠道价（京东 jd_price / 猫超 channel_price，沿用旧口径）</div></div>
-      <div class="kv"><div class="k">市场价参照 · ③ 优先级与兜底</div><div class="v">天镜人工核实 > 向量收敛新价 > 旧算法相似采信 > ERP基准价兜底；向量新价 10,075 个，兜底 41,258 个（保守中档不升档）</div></div>
-      <div class="rule-box"><b>成品：</b><code>分销标准池定价_2026-11-25.xlsx</code> —— 58,423 行 × 31 列。真实对标 17,165 个（空间率中位 15.9%），ERP 兜底 41,258 个。剔除的京东品 16,644 个不再出现在货盘一。</div>
+      <div class="kv"><div class="k">市场价参照 · ③ 优先级与兜底</div><div class="v">天镜人工核实 > 向量收敛新价 > 旧算法相似采信 > ERP基准价兜底；向量新价 10,075 个 + 高边界折算 3,877 个，兜底 37,386 个（保守中档不升档）</div></div>
+      <div class="rule-box"><b>成品：</b><code>分销标准池定价_2026-11-25.xlsx</code> —— 58,423 行 × 31 列。真实对标 21,037 个（空间率中位 15.9%），ERP 兜底 37,386 个。高边界 0.80-0.85 无冲突候选经规格折算救回 3,877 个（合理性护栏 0.5~8 倍成本，丢弃 5,591 个异常折算留档）。剔除的京东品 16,644 个不再出现在货盘一。</div>
     </div>
   </div>
 
@@ -226,11 +226,11 @@
 
   <div class="final-card">
     <div class="final-head">
-      <div class="n">310,390 行 · 四货源并集</div>
+      <div class="n">308,769 行 · 四货源并集</div>
       <div class="file">全货盘聚合表_2026-11-25.csv</div>
     </div>
     <div class="final-body">
-      <div class="stat-chip hi"><div class="n">50,481</div><div class="t">本来纯池行（已剔京东品，沿用内部档）</div></div>
+      <div class="stat-chip hi"><div class="n">48,860</div><div class="t">本来纯池行（已剔京东品，高边界折算后空间过滤更准）</div></div>
       <div class="stat-chip"><div class="n">18,402</div><div class="t">京东VOP 行（协议价成本，直发档）</div></div>
       <div class="stat-chip"><div class="n">238,245</div><div class="t">猫超行（供货价成本，直发档）</div></div>
       <div class="stat-chip hi"><div class="n">3,262</div><div class="t">东方甄选行（purchasePrice成本 / retailPrice市面 / canBuy可售 / 直发档）</div></div>
@@ -258,7 +258,7 @@
   <h2 class="section-title">交付物清单（2026-11-25）</h2>
   <div class="file-list">
     <div class="file-item"><div class="fn">交付物/2026-W48/01_货盘一_本来定制/分销标准池定价_2026-11-25.xlsx</div><div class="fd">货盘一成品 · 58,423 行（纯池+向量新价）</div></div>
-    <div class="file-item"><div class="fn">交付物/2026-W48/02_货盘二_技术公司全货盘/全货盘聚合表_2026-11-25.csv</div><div class="fd">货盘二成品 · 310,390 行（四源）</div></div>
+    <div class="file-item"><div class="fn">交付物/2026-W48/02_货盘二_技术公司全货盘/全货盘聚合表_2026-11-25.csv</div><div class="fd">货盘二成品 · 308,769 行（四源）</div></div>
     <div class="file-item"><div class="fn">交付物/2026-W48/03_货盘底表/5_跨源对齐/分销池_ERP京东品.jsonl + 收敛_本网京东/猫超.jsonl</div><div class="fd">16,644 京东品剔除清单 + 1对1向量收敛对</div></div>
     <div class="file-item"><div class="fn">猫超商品宽表SKU级_2026-11-21.csv（已归档 交付物/2026-W47/03_底稿数据/）</div><div class="fd">猫超底表 · 813,572 行 · 四价+折扣率+券后毛利比 · 采集目录已改名 supply_pull（原 jdvop_pull）</div></div>
     <div class="file-item"><div class="fn">02_货盘二/全链路说明_两大货盘_2026-11-25.html</div><div class="fd">本文件</div></div>

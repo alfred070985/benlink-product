@@ -45,6 +45,9 @@ STATS_OUT = HERE / f"定价统计_{TODAY}.json"
 EXCLUDE = latest("allpool_output/分销池_ERP京东品.jsonl", "ERP_JD_EXCLUDE")
 CONV_JD = latest("allpool_output/收敛_本网京东.jsonl", "CONV_JD")
 CONV_MC = latest("allpool_output/收敛_本网猫超.jsonl", "CONV_MC")
+# 高边界（0.80-0.85 无冲突·规格折算）补充来源，用户 2026-11-25 拍板降档采信
+HB_JD = latest("allpool_output/收敛_高边界_京东.jsonl", "HB_JD")
+HB_MC = latest("allpool_output/收敛_高边界_猫超.jsonl", "HB_MC")
 
 
 def load_vector_price():
@@ -52,14 +55,29 @@ def load_vector_price():
     京东取 jd_price(opp_mkt)，猫超取 channel_price(opp_cost)，与旧口径一致。
     同一品京东/猫超都有时：优先京东（原对标主源），猫超补缺。"""
     out = {}
-    # 先填猫超（channel_price = opp_cost）
+    hb_mc_ok = HB_MC is not None and HB_MC.exists()
+    hb_jd_ok = HB_JD is not None and HB_JD.exists()
+    # 优先级从低到高填：高边界 < 正式收敛；同类京东覆盖猫超
+    # 1) 高边界·猫超（折算价）
+    for l in (HB_MC.open(encoding="utf-8") if hb_mc_ok else []):
+        if l.strip():
+            o = json.loads(l)
+            if o.get("price") and o["price"] > 0:
+                out[str(o["pbasic"])] = (o["price"], o.get("src", "高边界·猫超折算"), str(o["target"]))
+    # 2) 高边界·京东（覆盖猫超）
+    for l in (HB_JD.open(encoding="utf-8") if hb_jd_ok else []):
+        if l.strip():
+            o = json.loads(l)
+            if o.get("price") and o["price"] > 0:
+                out[str(o["pbasic"])] = (o["price"], o.get("src", "高边界·京东折算"), str(o["target"]))
+    # 3) 正式收敛·猫超（≥0.85，覆盖高边界）
     for l in CONV_MC.open(encoding="utf-8"):
         if l.strip():
             o = json.loads(l)
             p = o.get("opp_cost")
             if p and p > 0:
                 out[str(o["pbasic"])] = (p, "向量收敛·猫超渠道价", str(o["target"]))
-    # 京东覆盖（jd_price = opp_mkt），京东优先
+    # 4) 正式收敛·京东（≥0.85，最高优先）
     for l in CONV_JD.open(encoding="utf-8"):
         if l.strip():
             o = json.loads(l)
@@ -132,7 +150,7 @@ def main():
         # 优先级3：向量收敛新价（用户拍板优先级：天镜 > 向量新价 > 旧算法）
         elif str(pb) in vec:
             jd, jd_src, jd_sku = vec[str(pb)]
-            stat["对标_向量新价"] += 1
+            stat["对标_高边界折算" if "高边界" in jd_src else "对标_向量新价"] += 1
         # 优先级4：旧算法相似采信(≥0.75)
         elif m:
             tj = hist.get(m["jd_sku"])
