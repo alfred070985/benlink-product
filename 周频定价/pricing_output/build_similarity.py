@@ -117,14 +117,24 @@ def brand_main(s):
 
 
 def brand_tokens(s):
-    """从商品名开头提取品牌的多粒度token（2/3/4字），用于品牌一致性判断。"""
-    s = re.sub(r"【[^】]*】", "", str(s or "")).strip()
-    s = re.sub(r"^[（(]?[A-Za-z]+[）)]?\s*", "", s)
-    m = re.match(r"^([\u4e00-\u9fa5]{2,6})", s)
+    """从商品名提取品牌的多粒度token（2/3/4字），用于品牌一致性判断。
+
+    命名规范优先：【品牌】开头时，【】内文本就是品牌（如【鲁花】花生油…），
+    同时保留【】后正文开头词的 token 作并集（兼容【云仓】这类非品牌前缀）。"""
+    s = str(s or "").strip()
+    toks = set()
+    m0 = re.match(r"^【([^】]+)】", s)
+    if m0:
+        w0 = m0.group(1).strip()
+        if re.fullmatch(r"[一-龥]{2,6}", w0):
+            toks |= {w0[:2], w0[:3], w0[:4], w0}
+    s2 = re.sub(r"【[^】]*】", "", s).strip()
+    s2 = re.sub(r"^[（(]?[A-Za-z]+[）)]?\s*", "", s2)
+    m = re.match(r"^([\u4e00-\u9fa5]{2,6})", s2)
     if m:
         w = m.group(1)
-        return {w[:2], w[:3], w[:4]}
-    return set()
+        toks |= {w[:2], w[:3], w[:4]}
+    return toks
 
 
 def model_codes(s, brand_alias=""):
@@ -196,8 +206,8 @@ def parse_pack(name):
                 mult = cn[mcn.group(1)]; raw = mcn.group(0)
             else:
                 raw = ""
-            # 规格基数（主净含量，取第一个）
-            ms = re.search(r"(\d+(?:\.\d+)?)\s*(kg|毫升|ml|mg|g|l|升|斤|克)(?![\w])", s)
+            # 规格基数（主净含量，取第一个）；单位后允许紧跟中文（如"花生油5L香味浓郁"），只排除英文字母数字
+            ms = re.search(r"(\d+(?:\.\d+)?)\s*(kg|毫升|ml|mg|g|l|升|斤|克)(?![a-z0-9])", s)
             if not ms:
                 # 无净含量时，尝试纯件数（京东名常写"180瓶""30粒""60片"）
                 mc2 = re.search(r"(?<!\d)(\d{1,4})\s*(瓶|粒|片|支|袋|盒|罐|枚|只|桶)(?![\w装])", s)
