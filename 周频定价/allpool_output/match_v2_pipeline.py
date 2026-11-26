@@ -34,6 +34,10 @@ from attr_extract import attrs_of  # noqa: E402
 EXCLUDE = ROOT / "交付物/2026-W48/03_货盘底表/5_跨源对齐/分销池_ERP京东品.jsonl"
 ALIGN_DIR = HERE
 MODEL = "BAAI/bge-reranker-v2-m3"
+# 用户 2026-11-26 拍板：规格/件数写法不对称时，不能当"没信息"放过，须天然减分。
+# 典型：本网"珍珠米5KG"(净含量base，无显式件数) vs 猫超"丝苗米5kgx4袋"(件数4、base空)，
+# 精排 0.9432 误采信，折算价 24.18 远低于成本 40.67。扣 0.20 后降为边界。
+SPEC_MISMATCH_PENALTY = 0.20
 
 
 def load_exclude():
@@ -62,8 +66,30 @@ def load_recall(fn, topn, excl, limit=0):
     return out
 
 
+def spec_asymmetry(aa, bb):
+    """规格矛盾判定（用户 2026-11-26 拍板：规格对不上天然减分而非放过）。
+
+    关键区分（2026-11-26 真条码 2539 对实测）：
+      · 猫超品名普遍不写规格（如"蒙牛特仑苏营养纯牛奶苗条装"）——这是"信息缺失"，
+        不是"规格矛盾"。若把这类一并减分，会误伤 61.8% 真同款，毁掉链路。
+      · 真正矛盾 = 一方明确单件(有净含量base、无显式件数、count=1)，
+        另一方明确多件(pack_explicit 且 count>1)。典型"珍珠米5KG vs 丝苗米5kgx4袋"。
+    实测该精准规则对真同款误伤仅 3.5%，丝苗米case 命中。
+    """
+    a_single = bool(aa["base"]) and not aa["pack_explicit"] and aa["count"] == 1
+    b_single = bool(bb["base"]) and not bb["pack_explicit"] and bb["count"] == 1
+    a_multi = bool(aa["pack_explicit"]) and aa["count"] > 1
+    b_multi = bool(bb["pack_explicit"]) and bb["count"] > 1
+    return (a_single and b_multi) or (b_single and a_multi)
+
+
 def attr_filter(recall):
-    """属性强约束：品牌冲突/件数不等/规格不等 → 直接否；返回保留对 + 统计。"""
+    """属性强约束：品牌冲突/件数不等/规格不等 → 直接否。
+
+    规格写法不对称（单边件数/单边规格）不硬拦，标记 penalize=True，
+    在精排分上扣 SPEC_MISMATCH_PENALTY（用户 11-26 拍板"天然减分"）。
+    返回保留对 (o, aa, bb, penalize) + 统计。
+    """
     kept = []
     stat = Counter()
     for a, cs in recall.items():
@@ -84,8 +110,9 @@ def attr_filter(recall):
             if why:
                 stat[why] += 1
             else:
-                kept.append((o, aa, bb))
-                stat["保留"] += 1
+                pen = spec_asymmetry(aa, bb)
+                kept.append((o, aa, bb, pen))
+                stat["规格不对称-减分" if pen else "保留"] += 1
     return kept, stat
 
 
@@ -141,7 +168,7 @@ def main():
         print(f"\n[{which}] 召回品{len(recall)} → 属性过滤后 {len(kept)} 对 {dict(stat)}", flush=True)
 
         # 精排打分（分批）
-        texts = [[o.get("a_name", ""), o.get("b_name", "")] for o, _, _ in kept]
+        texts = [[o.get("a_name", ""), o.get("b_name", "")] for o, _, _, _ in kept]
         scores = []
         B = 256
         for i in range(0, len(texts), B):
@@ -150,6 +177,10 @@ def main():
             if (i // B) % 20 == 0:
                 print(f"  精排 {i+len(ss)}/{len(texts)} {time.time()-t0:.0f}s", flush=True)
 
+        # 规格不对称天然减分（用户 11-26 拍板）
+        final_scores = [round(s - (SPEC_MISMATCH_PENALTY if pen else 0.0), 4)
+                        for s, (_, _, _, pen) in zip(scores, kept)]
+
         # 真条码分数（本网品 + 其真猫超品，只有 mc 侧有效）
         truth_scores = []
         if which == "mc":
@@ -157,7 +188,7 @@ def main():
             for pb, items in truth.items():
                 if pb in excl:
                     continue
-                bl_name = next((o.get("a_name", "") for o, _, _ in kept if str(o["a"]) == pb), None)
+                bl_name = next((o.get("a_name", "") for o, _, _, _ in kept if str(o["a"]) == pb), None)
                 if not bl_name:
                     continue
                 for pid, nm in items:
@@ -171,18 +202,19 @@ def main():
         out = ALIGN_DIR / f"对齐_v2_bl_{which}.jsonl"
         tier_cnt = Counter()
         with out.open("w", encoding="utf-8") as f:
-            for (o, aa, bb), s in zip(kept, scores):
+            for (o, aa, bb, pen), s in zip(kept, final_scores):
                 tier = "采信" if s >= args.accept else "边界"
                 tier_cnt[tier] += 1
                 f.write(json.dumps({
-                    "a": o["a"], "b": o["b"], "sim": round(s, 4), "sim_vec": o["sim"],
+                    "a": o["a"], "b": o["b"], "sim": s, "sim_vec": o["sim"],
                     "tier": tier, "rank": o["rank"], "conflict": "",
+                    "spec_penalty": SPEC_MISMATCH_PENALTY if pen else 0.0,
                     "a_name": o.get("a_name"), "b_name": o.get("b_name"),
                     "a_attr": aa, "b_attr": bb, "model": MODEL,
                 }, ensure_ascii=False) + "\n")
         print(f"  输出 {out.name}: {len(kept)} 行 {dict(tier_cnt)}, 耗时 {time.time()-t0:.0f}s", flush=True)
 
-        rows = calibrate(None, scores, truth, truth_scores)
+        rows = calibrate(None, final_scores, truth, truth_scores)
         print("  阈值校准:", [(r["阈值"], r["真同款通过率"]) for r in rows], flush=True)
         if which == "mc":
             cp = HERE / "v2_阈值校准.json"
