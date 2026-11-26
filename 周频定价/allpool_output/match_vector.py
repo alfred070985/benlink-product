@@ -122,8 +122,13 @@ def load_sources(limit=0):
 
 # ---------- 特征预计算 ----------
 
+# 明确包装件数：数字 + 量词（粒/盒/瓶/袋…）。用于识别"本网有规格、对方无规格"错配。
+# 注意：parse_pack 会把"单果克重103-124g"误解析成 base=124g，不可靠，故单独用文本正则。
+PACK_COUNT_RE = re.compile(r"(\d+)\s*(粒|个|只|片|袋|盒|瓶|包|桶|支|箱|罐|块|条|张|把|双|组)")
+
+
 def prep_features(srcs):
-    """每个品预计算：品牌token、规格pack。供硬约束用。"""
+    """每个品预计算：品牌token、规格pack、是否含明确包装件数。供硬约束用。"""
     feats = {}
     for sk, items in srcs.items():
         f = {}
@@ -133,19 +138,27 @@ def prep_features(srcs):
             bm = brand_main(it.get("brand") or "")
             if bm:
                 bt |= {bm[i:i+k] for k in (2, 3, 4) for i in range(max(1, len(bm)-k+1))} | {bm}
-            f[iid] = {"brand": bt, "pack": parse_pack(name)}
+            f[iid] = {"brand": bt, "pack": parse_pack(name),
+                      "pack_explicit": bool(PACK_COUNT_RE.search(name or ""))}
         feats[sk] = f
     return feats
 
 
-def hard_ok(fa, fb, pa, pb):
-    """硬约束：品牌冲突淘汰；规格都解析出且不一致淘汰；单价差>2.5倍淘汰。"""
+def hard_ok(fa, fb, pa, pb, enforce_spec=False):
+    """硬约束：品牌冲突淘汰；规格都解析出且不一致淘汰；单价差>2.5倍淘汰。
+
+    enforce_spec=True（仅本网侧启用，用户 2026-11-25 拍板）：
+      本网品名有明确包装件数（N粒/盒/瓶…），对方既无明确件数、parse_pack 也解析不出规格
+      → 判"对方无规格"不采信。典型：佳沛16粒礼盒 vs 猫超无规格散装（语义像但不可比价）。
+    """
     ba, bb = fa["brand"], fb["brand"]
     if ba and bb and not (ba & bb):
         return False, "品牌冲突"
     ca, cb = fa["pack"].get("base"), fb["pack"].get("base")
     if ca and cb and ca != cb:
         return False, "规格不一致"
+    if enforce_spec and fa.get("pack_explicit") and not cb and not fb.get("pack_explicit"):
+        return False, "对方无规格"
     if pa and pb:
         r = pa / pb
         if r > 2.5 or r < 1/2.5:
@@ -218,7 +231,8 @@ def main():
                             continue
                         bid = ids[b][bi]
                         ok, why = hard_ok(feats[a][aid], feats[b][bid],
-                                          srcs[a][aid]["price"], srcs[b][bid]["price"])
+                                          srcs[a][aid]["price"], srcs[b][bid]["price"],
+                                          enforce_spec=(a == "bl"))
                         if not ok:
                             stat[f"硬冲突_{why}"] += 1
                         tier = "采信" if (sim >= ACCEPT_TH and ok) else "边界"

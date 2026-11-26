@@ -33,8 +33,11 @@ from latest import latest  # noqa: E402
 from build_similarity import parse_pack  # noqa: E402
 
 TODAY = datetime.now().strftime("%Y-%m-%d")
+# 用户 2026-11-26 拍板：改用 v2 精排结果，采信阈值 0.8（原文件按 0.7 打的标不沿用，本脚本按 0.8 重判）
+ACCEPT = 0.8
+RESCUE_FLOOR = 0.75  # 边界可救下限；同时是高边界折算区间(0.75~0.80)下沿
 OUT = (ROOT / "交付物/2026-W48/03_货盘底表/5_跨源对齐"
-       / f"本来品_京东猫超相似度比对盘_{TODAY}.xlsx")
+       / f"本来品_京东猫超相似度比对盘_v2精排_{TODAY}.xlsx")
 
 
 def cnt_of(name):
@@ -42,6 +45,18 @@ def cnt_of(name):
         return (parse_pack(name or "").get("count") or 1) or 1
     except Exception:
         return 1
+
+
+def cnt_from_attr(attr, name):
+    """优先用 v2 精排链路已抽取的件数（修了佳沛“单果克重误当件数”的 bug），
+    没有则回退到 parse_pack。"""
+    try:
+        c = (attr or {}).get("count")
+        if c and int(c) > 0:
+            return int(c)
+    except (ValueError, TypeError):
+        pass
+    return cnt_of(name)
 
 
 def load_names():
@@ -157,12 +172,15 @@ def build(which, align_file):
             ch = p["hand"]
         if not ch:
             continue
-        cnt_bl, cnt_opp = cnt_of(o.get("a_name")), cnt_of(o.get("b_name"))
+        cnt_bl = cnt_from_attr(o.get("a_attr"), o.get("a_name"))
+        cnt_opp = cnt_from_attr(o.get("b_attr"), o.get("b_name"))
         if cnt_opp <= 0 or cnt_bl <= 0:
             continue
         adj = round(ch / cnt_opp * cnt_bl, 2)
+        # v2 文件里的 tier 是按 0.7 打的标；本次用户改 0.8，统一按精排分重判，不沿用旧标
+        tier = "采信" if o["sim"] >= ACCEPT else "边界"
         cands[a].append({
-            "pbasic": a, "opp": b, "sim": o["sim"], "tier": o["tier"],
+            "pbasic": a, "opp": b, "sim": o["sim"], "tier": tier,
             "rank": o["rank"], "conflict": o.get("conflict") or "",
             "opp_name": o.get("b_name") or p["name"],
             "channel": ch, "hand": p["hand"], "market": p["market"],
@@ -176,12 +194,12 @@ def build(which, align_file):
 
 
 HDR_DETAIL = ["本来编号(P码)", "本来品名", "本来成本(元)", "当前定价状态", "当前对标价(元)",
-              "对照货源", "对照编号", "对照品名", "相似度", "档位", "差异/冲突", "候选序",
+              "对照货源", "对照编号", "对照品名", "精排分(v2)", "档位", "差异/冲突", "候选序",
               "对照渠道价(元)", "对照到手价(元)", "对照吊牌价(元)",
               "本来件数", "对照件数", "规格折算对标价(元)"]
 HDR_SUM = ["本来编号(P码)", "本来品名", "本来成本(元)", "当前定价状态", "当前对标价(元)",
-           "京东最佳相似度", "京东最佳品名", "京东折算对标价(元)", "京东档位",
-           "猫超最佳相似度", "猫超最佳品名", "猫超折算对标价(元)", "猫超档位", "可救标记"]
+           "京东最佳精排分", "京东最佳品名", "京东折算对标价(元)", "京东档位",
+           "猫超最佳精排分", "猫超最佳品名", "猫超折算对标价(元)", "猫超档位", "可救标记"]
 
 
 def main():
@@ -196,8 +214,8 @@ def main():
     pure = [p for p in pure if p not in excl]
     print(f"纯本来池 {len(pure)} 品")
 
-    jd = build("jd", "对齐_向量_bl_jd.jsonl")
-    mc = build("mc", "对齐_向量_bl_mc.jsonl")
+    jd = build("jd", "对齐_v2_bl_jd.jsonl")
+    mc = build("mc", "对齐_v2_bl_mc.jsonl")
     print(f"有候选: 京东 {len(jd)} 品, 猫超 {len(mc)} 品")
 
     wb = openpyxl.Workbook(write_only=True)
@@ -208,12 +226,14 @@ def main():
         ["生成日期", TODAY],
         ["主体", f"纯本来池 {len(pure)} 品（75,067 − ERP t_goods_map 剔 16,644 京东品）"],
         ["对照货源", "京东VOP + 猫超（只有这两源，不含京东×猫超、东方甄选）"],
-        ["模型", "bge-small-zh-v1.5 本地向量，余弦相似度；每品展示最像的 3 个候选"],
-        ["档位", "采信=相似度≥0.85 且无硬约束冲突；边界=0.70~0.85 或有规格/单价冲突"],
-        ["规格折算价", "对照渠道价 ÷ 对照件数 × 本来件数；件数解析复用 build_similarity.parse_pack"],
-        ["当前定价状态", "取自货盘一成品对标来源列：天镜核实/向量采信/高边界折算/ERP兜底(无真实价)"],
-        ["可救标记", "当前 ERP兜底 且有边界候选（相似度≥0.75）→ 值得人工审阅是否采信"],
-        ["用法", "按相似度排序看，勾中可采信的候选；注意品牌冲突行通常是误配"],
+        ["模型(v2精排)", "bge-small 向量召回 top5 → 属性硬约束(品牌/件数/规格/无规格) → BAAI/bge-reranker-v2-m3 精排分；每品展示最像的 3 个候选"],
+        ["档位(阈值0.8)", "采信=精排分≥0.80 且无硬约束冲突；边界=精排分<0.80（原0.7打的标不沿用，本盘按0.8重判）"],
+        ["阈值校准", "猫超 2,539 对真条码验证：0.8档真同款通过率83.9%、全量保留率57.7%；京东无真条码集，0.8借猫超校准间接推断"],
+        ["规格折算价", "对照渠道价 ÷ 对照件数 × 本来件数；件数优先用 v2 抽取属性(已修佳沛单果克重误判)，回退 parse_pack"],
+        ["高边界折算区间", "随采信线上移至 0.75~0.80（紧邻新采信线下方）；本盘只展示不实际折算，货盘重算时才应用"],
+        ["当前定价状态", "取自货盘一成品对标来源列：天镜核实/向量采信/高边界折算/ERP兜底(无真实价)（货盘一未重算，仍为旧口径）"],
+        ["可救标记", "当前 ERP兜底 且有边界候选（精排分≥0.75、非品牌冲突）→ 值得人工审阅是否采信"],
+        ["用法", "按精排分排序看，勾中可采信的候选；属性冲突行在精排前已被拦截，故本盘冲突列多为空"],
     ]
     for row in intro:
         ws.append(row)
@@ -249,8 +269,8 @@ def main():
         bjd = jd.get(pb, [None])[0]
         bmc = mc.get(pb, [None])[0]
         def usable(cs):
-            # 可救：边界、相似度≥0.75、且非品牌冲突（品牌冲突基本是误配）；看全部候选
-            return any(c["tier"] == "边界" and c["sim"] >= 0.75 and c["conflict"] != "品牌冲突"
+            # 可救：边界、精排分≥0.75、且非品牌冲突（品牌冲突基本是误配）；看全部候选
+            return any(c["tier"] == "边界" and c["sim"] >= RESCUE_FLOOR and c["conflict"] != "品牌冲突"
                        for c in cs)
         rescuable = "可救-待审" if (st.startswith("ERP兜底") and
                                   (usable(jd.get(pb, [])) or usable(mc.get(pb, [])))) else ""
