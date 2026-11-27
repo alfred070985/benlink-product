@@ -31,6 +31,8 @@ ITEM_UNITS = ["粒", "个", "片", "条", "张", "块"]
 
 # 单份重量语境词：出现这些词时，其后的 g/ml 是"单份重量"不是整件规格
 UNIT_WEIGHT_CTX = re.compile(r"(单果|单粒|单片|单个|每粒|每片|每个|单颗|每颗|单包|每包)")
+# 营养含量词：出现这些词时，附近的 g/ml 是成分含量（3.8g蛋白、4.3g乳蛋白），不是商品规格
+NUTRIENT_WORDS = ("蛋白", "脂肪", "碳水", "钠", "钙", "糖", "能量", "热量", "纤维", "胆固醇", "维生素")
 
 
 def _norm_unit(u):
@@ -61,28 +63,33 @@ def extract(name):
         out["unit_weight"] = f"{uw.group(2)}{unit}"
 
     # ---- 2. 件数：优先「N + 包装单位」，排除单份语境 ----
-    # 2a. 显式包装件数：N盒/N瓶/N袋/...（含 *N / xN 形式）
-    m = re.search(r"(?<!\d)(\d{1,4})\s*(盒|瓶|袋|桶|罐|包|箱|支|只|枚|把|双|组|卷|提)(装)?(?=[\s（(）)、,，。；;]|$)", s)
-    if m:
-        out["count"], out["count_raw"] = int(m.group(1)), m.group(0)
+    # 2a. 显式包装件数：N盒/N瓶/N袋/...
+    # 用户 11-27 拍板修：量词后允许紧跟中文（"8支家庭装颜色随机""106片日夜组合"），
+    # 之前尾部约束要求空格/标点，导致这类件数漏判→折算价不除件数虚高。
+    # 防误判：①前缀排除范围写法"45-60只"里的 60；②上下文排除单份语境（单果/每片克重）。
+    found = None
+    for mm in re.finditer(r"(?<![\d\-~～])(\d{1,4})\s*(盒|瓶|袋|桶|罐|包|箱|支|只|枚|把|双|组|卷|提|片|条|粒|个|张|块)", s):
+        ctx = s[max(0, mm.start() - 2):mm.end() + 2]
+        if UNIT_WEIGHT_CTX.search(ctx):
+            continue
+        # 排除品牌/型号里的 4 位数字紧贴量词（旭日1996双拼鸭蛋18枚 里的 1996）
+        if len(mm.group(1)) == 4 and int(mm.group(1)) >= 1000 and mm.end() < len(s) and s[mm.end()] in "双拼":
+            continue
+        found = mm
+        break
+    if found:
+        out["count"], out["count_raw"] = int(found.group(1)), found.group(0)
     else:
         # 2b. 规格*件数：500ml*12 / 200g*8
         m = re.search(r"(\d+(?:\.\d+)?)\s*(ml|g|kg|l|升|克|毫升)\s*[*×x]\s*(\d+)", s)
         if m:
             out["count"], out["count_raw"] = int(m.group(3)), m.group(0)
         else:
-            # 2c. 数字+量词：N粒/N个/N片（排除前面紧贴"单/每"的单份语境）
-            m = re.search(r"(?<!\d)(\d{1,4})\s*(粒|个|片|条|张|块)(?![\w装])", s)
-            if m:
-                # 排除"单果克重103-124g"这类：数字 portion 若被 UNIT_WEIGHT_CTX 紧邻覆盖则跳过
-                ctx = s[max(0, m.start() - 6):m.end() + 6]
-                if not UNIT_WEIGHT_CTX.search(ctx):
-                    out["count"], out["count_raw"] = int(m.group(1)), m.group(0)
-                else:
-                    cm = re.search(r"([双两三四五六])\s*(瓶|袋|盒|罐|支|枚|只)", s)
-                    if cm:
-                        cn = {"双": 2, "两": 2, "三": 3, "四": 4, "五": 5, "六": 6}
-                        out["count"], out["count_raw"] = cn[cm.group(1)], cm.group(0)
+            # 2c. 中文数字件数：双瓶/两袋/三盒
+            cm = re.search(r"([双两三四五六])\s*(瓶|袋|盒|罐|支|枚|只)", s)
+            if cm:
+                cn = {"双": 2, "两": 2, "三": 3, "四": 4, "五": 5, "六": 6}
+                out["count"], out["count_raw"] = cn[cm.group(1)], cm.group(0)
 
     # ---- 3. 规格净含量：排除单份重量语境 ----
     ms = re.search(r"(\d+(?:\.\d+)?)\s*(kg|毫升|ml|mg|g|l|升|斤|克)(?![a-z0-9])", s)
@@ -99,12 +106,83 @@ def extract(name):
     return out
 
 
+def spec_values(name):
+    """抽取清洗后的可比规格数值，供 18 倍差异规则用（用户 2026-11-27 拍板）。
+
+    只保留三类真实可比的规格维度：长度(len)/容量重量(vol)/包装件数(count)。
+    清洗规则（避免误伤真同款，实测 69码 2539 对）：
+      · 排除营养含量：3.8g蛋白、4.3g乳蛋白、3.3g/100ml（NUTRIENT_WORDS）
+      · 排除单份克重：630g(30g*21包) 里的 30g（*N包 语境）
+      · 排除型号数字：茶花302003、6类 CAT6、5S压榨
+      · 排除范围粒度：45-60只/盒（前带 - ~ ～）
+      · 同维度只取一个代表值（最大值），避免单包×N包里的小值混入
+    返回 {dim: [值]}，值为统一单位后的浮点数：len→米, vol→毫升/克基数, count→件。
+    """
+    s = full2half(str(name or "")).lower()
+    out = {"len": [], "vol": [], "count": []}
+
+    # 长度：米/cm/mm/英寸 → 统一到米；排除线芯直径(0.008mm)、型号数字
+    lens = []
+    for v, u in re.findall(r"(\d+(?:\.\d+)?)\s*(米|cm|厘米|mm|毫米|英寸|寸|m)(?![a-z])", s):
+        # 排除纯型号数字（茶花302003 M、A0412 等）：6位以上的裸编号
+        if len(str(v).replace(".", "")) >= 6 and float(v) > 10000:
+            continue
+        unit_v = {"米": 1.0, "m": 1.0, "cm": 0.01, "厘米": 0.01, "mm": 0.001,
+                  "毫米": 0.001, "英寸": 0.0254, "寸": 0.0333}.get(u, 1.0)
+        meters = float(v) * unit_v
+        if meters < 0.01:   # 0.008mm 线芯直径这类，不是商品规格
+            continue
+        lens.append(meters)
+    if lens:
+        out["len"] = [max(lens)]
+
+    # 容量/重量：ml/l/g/kg/斤 → 统一基数值（ml 与 g 分开单位语义，但同维度内比值可比）
+    vols = []
+    for m in re.finditer(r"(\d+(?:\.\d+)?)\s*(kg|毫升|ml|mg|g|l|升|斤|克)(?![a-z0-9])", s):
+        # 营养词：紧跟单位后（3.8g蛋白），或"3.3g/100ml乳蛋白"隔着单位/斜杠的营养标注
+        ctx = s[m.start():m.end() + 4]
+        ctx_wide = s[m.start():m.end() + 12]
+        if (any(w in ctx for w in NUTRIENT_WORDS)
+                or ("/" in ctx_wide[:ctx_wide.find("/") + 8] and any(w in ctx_wide for w in NUTRIENT_WORDS))
+                or UNIT_WEIGHT_CTX.search(s[max(0, m.start() - 2):m.end() + 2])):
+            continue
+        # 排除型号/材质里的 L：316L不锈钢、DS-14070L、DL1028L、MK-YSNC1501P
+        # 真容量是短数字(2L/1.5L/10L)，型号数字一般≥3位且紧贴中文或处于型号串中
+        if m.group(2) == "l":
+            raw = m.group(1)
+            tail = s[m.end():m.end() + 4]
+            if (len(raw) >= 3 and ("不锈钢" in tail or "材质" in tail or "钢" in tail)) or re.match(r"[a-z]", tail):
+                continue
+            if len(raw) >= 4:  # 14070L / 1028L 型号
+                continue
+        # 单份克重（30g*21包）不用单独排除：同维度取 max 时 630g 会盖过 30g
+        factor, _ = _norm_unit(m.group(2))
+        try:
+            val = float(m.group(1)) * factor
+        except ValueError:
+            continue
+        # mg 换算后极小，跳过（营养/添加剂量级）
+        if m.group(2) == "mg" or val < 1:
+            continue
+        vols.append(val)
+    if vols:
+        out["vol"] = [max(vols)]
+
+    # 包装件数：复用 extract 的 count，仅 >1 才算（1 件不构成倍数比较）
+    # 但"1瓶 vs 24瓶"这类是用户明确要判的场景：两边都写到件数维度时 1 也要进集合，
+    # 由调用方仅在一边有件数另一边无件数时跳过该维度比较。
+    a = extract(name)
+    if a["count"] >= 1 and a["count_raw"]:
+        out["count"] = [float(a["count"])]
+    return out
+
+
 def attrs_of(name):
     """供 hard_ok 用：返回是否含明确包装件数、规格base、件数。"""
     a = extract(name)
     return {"pack_explicit": bool(a["count_raw"]) and a["count"] > 1,
             "base": a["base"], "count": a["count"], "count_raw": a["count_raw"],
-            "unit_weight": a["unit_weight"]}
+            "unit_weight": a["unit_weight"], "specs": spec_values(name)}
 
 
 if __name__ == "__main__":

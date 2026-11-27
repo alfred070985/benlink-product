@@ -38,6 +38,10 @@ MODEL = "BAAI/bge-reranker-v2-m3"
 # 典型：本网"珍珠米5KG"(净含量base，无显式件数) vs 猫超"丝苗米5kgx4袋"(件数4、base空)，
 # 精排 0.9432 误采信，折算价 24.18 远低于成本 40.67。扣 0.20 后降为边界。
 SPEC_MISMATCH_PENALTY = 0.20
+# 用户 2026-11-27 拍板：可比维度差异超过 18 倍 → 完全不当同品，直接排除；
+# 18 倍以内（含）算同款不同包装，放行进入折算比价。典型：
+#   网线 0.5米 vs 305米=610倍 → 排除；水 1瓶 vs 12瓶=12倍 → 可比；1 vs 24瓶=24倍 → 排除。
+SPEC_RATIO_LIMIT = 18.0
 
 
 def load_exclude():
@@ -83,11 +87,35 @@ def spec_asymmetry(aa, bb):
     return (a_single and b_multi) or (b_single and a_multi)
 
 
-def attr_filter(recall):
-    """属性强约束：品牌冲突/件数不等/规格不等 → 直接否。
+def ratio_over_limit(aa, bb):
+    """18 倍规则（用户 2026-11-27 拍板）：两边都有同一可比维度且差异>18 倍 → 排除。
 
-    规格写法不对称（单边件数/单边规格）不硬拦，标记 penalize=True，
-    在精排分上扣 SPEC_MISMATCH_PENALTY（用户 11-26 拍板"天然减分"）。
+    只在两边同维度都有值时比，单边有值=信息缺失不算矛盾（避免误伤真同款）。
+    维度来自 attr_extract.spec_values，已清洗营养含量/型号/单份克重/线芯直径。
+    返回 (是否超限, 命中的维度与倍数描述)。
+    """
+    sa, sb = aa.get("specs") or {}, bb.get("specs") or {}
+    for dim in ("count", "len", "vol"):
+        va, vb = sa.get(dim) or [], sb.get(dim) or []
+        if not va or not vb:
+            continue
+        for x in va:
+            for y in vb:
+                if x <= 0 or y <= 0:
+                    continue
+                ratio = max(x, y) / min(x, y)
+                if ratio > SPEC_RATIO_LIMIT:
+                    return True, f"{dim} {x:g}vs{y:g}={ratio:.0f}倍"
+    return False, ""
+
+
+def attr_filter(recall):
+    """属性强约束（2026-11-27 版）：
+      · 品牌冲突 → 直接否
+      · 本网有明确件数、对方无件数无规格（佳沛 case）→ 直接否
+      · 同维度差异>18 倍 → 直接否（用户拍板"超18倍不当同品"）
+      · 件数/规格不等但≤18 倍 → 放行（旧版一律硬拦，误杀了 5L vs 2.5L 等同款）
+      · 规格写法不对称（单边件数/单边规格，如对方面×4袋本网5KG）→ 减分 0.20
     返回保留对 (o, aa, bb, penalize) + 统计。
     """
     kept = []
@@ -99,14 +127,14 @@ def attr_filter(recall):
             why = ""
             if ba and bb_ and not (ba & bb_):
                 why = "品牌冲突"
-            elif aa["pack_explicit"] and bb["pack_explicit"] and aa["count"] != bb["count"]:
-                why = "件数不等"
-            elif aa["base"] and bb["base"] and aa["base"] != bb["base"]:
-                why = "规格不等"
             elif aa["pack_explicit"] and not bb["pack_explicit"] and not bb["base"]:
                 # 用户 11-25 拍板延续：本网有明确件数、对方既无件数也无规格 → 不可比价，拦
-                # 典型：佳沛16粒礼盒 vs 猫超无规格散装（向量0.851/精排0.956 均误判）
                 why = "对方无规格"
+            else:
+                over, detail = ratio_over_limit(aa, bb)
+                if over:
+                    why = "超18倍"
+                    stat[detail] += 1
             if why:
                 stat[why] += 1
             else:
