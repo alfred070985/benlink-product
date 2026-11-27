@@ -1,0 +1,15 @@
+{
+ "date": "2026-11-27",
+ "strategy": "强品类词+交集豁免+互斥对(油vs米面调味/奶vs水产肉禽)",
+ "truth_pairs": 2539,
+ "false_kill": 0,
+ "false_kill_rate": 0.0,
+ "bad_samples": [],
+ "known_cases": {
+  "油vs米": "拦截",
+  "油vs面": "拦截",
+  "葵花籽油真同款": "放行",
+  "饼干黄油配料": "放行",
+  "礼盒combo": "跳过"
+ }
+}

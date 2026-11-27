@@ -30,6 +30,8 @@ sys.path.insert(0, str(ROOT / "pricing_output"))
 from latest import latest  # noqa: E402
 from build_similarity import brand_tokens  # noqa: E402
 from attr_extract import attrs_of  # noqa: E402
+from category_classify import cat_conflict, is_combo  # noqa: E402
+import backfill_category as cat_bf  # noqa: E402
 
 EXCLUDE = ROOT / "交付物/2026-W48/03_货盘底表/5_跨源对齐/分销池_ERP京东品.jsonl"
 ALIGN_DIR = HERE
@@ -112,6 +114,9 @@ def ratio_over_limit(aa, bb):
 def attr_filter(recall):
     """属性强约束（2026-11-27 版）：
       · 品牌冲突 → 直接否
+      · 品类互斥（2026-11-27 新增，用户拍板）：主食品类强词命中互斥对（油vs米/面/调味、
+        奶vs水产/肉禽）→ 直接否；组合/礼盒或任一方无强词或两方主体类一致 → 放行
+        （69码真同款 0/2539 误杀校准通过）
       · 本网有明确件数、对方无件数无规格（佳沛 case）→ 直接否
       · 同维度差异>18 倍 → 直接否（用户拍板"超18倍不当同品"）
       · 件数/规格不等但≤18 倍 → 放行（旧版一律硬拦，误杀了 5L vs 2.5L 等同款）
@@ -124,8 +129,15 @@ def attr_filter(recall):
         for o in cs:
             aa, bb = attrs_of(o.get("a_name")), attrs_of(o.get("b_name"))
             ba, bb_ = brand_tokens(o.get("a_name")), brand_tokens(o.get("b_name"))
+            an, bn = o.get("a_name", ""), o.get("b_name", "")
+            combo = is_combo(an) or is_combo(bn)
             why = ""
-            if ba and bb_ and not (ba & bb_):
+            # 品类互斥优先于品牌冲突：brand_tokens 会把"稻米油/大米"这类无品牌品类词
+            # 误当品牌，若先判品牌会掩盖真实的品类错配归因（结果都对，但审查报告归因错）。
+            cat_bad = cat_conflict(an, bn, combo)
+            if cat_bad:
+                why = "品类互斥"
+            elif ba and bb_ and not (ba & bb_):
                 why = "品牌冲突"
             elif aa["pack_explicit"] and not bb["pack_explicit"] and not bb["base"]:
                 # 用户 11-25 拍板延续：本网有明确件数、对方既无件数也无规格 → 不可比价，拦
@@ -183,6 +195,11 @@ def main():
 
     excl = load_exclude()
     truth = load_truth()
+    # 品类字典/货源类目（2026-11-27 新增）：精排输出时直接补品类字段，重跑不丢
+    cat_dict = cat_bf.load_cat_dict()
+    bl_cat = cat_bf.load_bl_cat()
+    mc_cat = cat_bf.load_mc_cat()
+    print(f"品类字典 {len(cat_dict)} 条 / 本网底盘 {len(bl_cat)} P码 / 猫超 {len(mc_cat)} 品", flush=True)
     print(f"真条码验证集 {sum(len(v) for v in truth.values())} 对 / {len(truth)} 品", flush=True)
 
     from sentence_transformers import CrossEncoder
@@ -226,20 +243,22 @@ def main():
                 truth_scores = [float(s) for s in ts]
                 print(f"  真条码精排 {len(truth_scores)} 对, 均分 {sum(truth_scores)/len(truth_scores):.3f}", flush=True)
 
-        # 写新对齐文件
+        # 写新对齐文件（品类字段由 backfill_category.enrich 统一补，重跑不丢）
         out = ALIGN_DIR / f"对齐_v2_bl_{which}.jsonl"
         tier_cnt = Counter()
         with out.open("w", encoding="utf-8") as f:
             for (o, aa, bb, pen), s in zip(kept, final_scores):
                 tier = "采信" if s >= args.accept else "边界"
                 tier_cnt[tier] += 1
-                f.write(json.dumps({
+                rec = {
                     "a": o["a"], "b": o["b"], "sim": s, "sim_vec": o["sim"],
                     "tier": tier, "rank": o["rank"], "conflict": "",
                     "spec_penalty": SPEC_MISMATCH_PENALTY if pen else 0.0,
                     "a_name": o.get("a_name"), "b_name": o.get("b_name"),
                     "a_attr": aa, "b_attr": bb, "model": MODEL,
-                }, ensure_ascii=False) + "\n")
+                }
+                cat_bf.enrich(rec, which, bl_cat, mc_cat, cat_dict)
+                f.write(json.dumps(rec, ensure_ascii=False) + "\n")
         print(f"  输出 {out.name}: {len(kept)} 行 {dict(tier_cnt)}, 耗时 {time.time()-t0:.0f}s", flush=True)
 
         rows = calibrate(None, final_scores, truth, truth_scores)

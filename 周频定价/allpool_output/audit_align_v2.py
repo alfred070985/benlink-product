@@ -131,8 +131,10 @@ def main():
             adj = round(cb / cnt_b * cnt_a, 2) if cb and cnt_b and cnt_a else None
             cost = costs.get(a)
             sigs = []
-            ca, cbb = cats_of(an), cats_of(bn)
-            if ca and cbb and not (ca & cbb):
+            # 品类冲突信号（2026-11-27）：复用与硬约束同一套强品类词判定，
+            # 口径一致且避免旧 cats_of 词典"金龙鱼→水产/葡萄味→水果"的误报。
+            from category_classify import cat_conflict as _cc, is_combo as _ico
+            if _cc(an, bn, _ico(an) or _ico(bn)):
                 sigs.append("品类冲突")
             bh_a, bh_b = brand_head(an), brand_head(bn)
             if (bh_a and bh_b and bh_a != bh_b and bh_a[0] != bh_b[0]
